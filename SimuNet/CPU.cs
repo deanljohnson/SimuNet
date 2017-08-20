@@ -5,7 +5,8 @@ namespace SimuNet
     public class CPU
     {
         private readonly ALU m_ALU = new ALU();
-        private int m_ProgramCounter = 0;
+
+        public Register PC { get; } = new Register("PC");
 
         public Register V0 { get; } = new Register("V0");
         public Register V1 { get; } = new Register("V1");
@@ -24,29 +25,18 @@ namespace SimuNet
             if (LoadedProgram == null)
                 throw new InvalidOperationException("Cannot run a program until one is loaded");
 
-            m_ProgramCounter = 0;
+            PC.Value = 0;
 
             while (!LoadedProgram.Finished)
             {
-                Instruction instr = LoadedProgram[m_ProgramCounter];
-                switch (instr.Code)
-                {
-                    case OpCode.Exit:
-                        LoadedProgram.Finished = true;
-                        break;
-                    case OpCode.Jump:
-                        m_ProgramCounter = instr.Immediate1;
-                        break;
-                    default:
-                        Execute(instr);
-                        m_ProgramCounter++;
-                        break;
-                }
+                Execute(LoadedProgram[PC.Value]);
+                PC.Value++;
             }
         }
 
         public void Execute(Instruction instr)
         {
+            int result;
             switch (instr.Code)
             {
                 case OpCode.NoOp:
@@ -55,13 +45,33 @@ namespace SimuNet
                 case OpCode.Sub:
                 case OpCode.Mul:
                 case OpCode.Div:
-                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.B.Value, out int result);
+                case OpCode.Equal:
+                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.B.Value, out result);
                     instr.C.Value = result;
                     break;
                 case OpCode.Load:
                     instr.A.Value = instr.Immediate1;
                     break;
+                case OpCode.Jump:
+                    PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnZero:
+                    m_ALU.DoOp(OpCode.Equal, instr.A.Value, 0, out result);
+                    if (result == 1)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnNotZero:
+                    m_ALU.DoOp(OpCode.Equal, instr.A.Value, 0, out result);
+                    if (result == 0)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnEqual:
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    if (result == 0)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
                 case OpCode.Exit:
+                    LoadedProgram.Finished = true;
                     break;
                 case OpCode.Error:
                 default:

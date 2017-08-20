@@ -6,16 +6,18 @@
         NoOp,
         Exit,
 
-        // Binary Registers
         Add,
         Sub,
         Mul,
         Div,
 
-        // One reg, one immediate
+        Equal,
+
         Load,
 
-        // One immediate
-        Jump
+        Jump,
+        BranchOnZero,
+        BranchOnNotZero,
+        BranchOnEqual
     }
 }

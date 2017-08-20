@@ -18,6 +18,15 @@
             Immediate1 = 0;
         }
 
+        private Instruction(OpCode opCode, Register a, Register b, int immediate1)
+        {
+            Code = opCode;
+            A = a;
+            B = b;
+            C = null;
+            Immediate1 = immediate1;
+        }
+
         private Instruction(OpCode opCode, Register a, int immediate1)
         {
             Code = opCode;
@@ -61,9 +70,29 @@
             return new Instruction(OpCode.Load, a, b);
         }
 
+        public static Instruction Equal(Register a, Register b, Register c)
+        {
+            return new Instruction(OpCode.Equal, a, b, c);
+        }
+
         public static Instruction Jump(int a)
         {
             return new Instruction(OpCode.Jump, a);
+        }
+
+        public static Instruction BranchOnZero(Register a, int target)
+        {
+            return new Instruction(OpCode.BranchOnZero, a, target);
+        }
+
+        public static Instruction BranchOnNotZero(Register a, int target)
+        {
+            return new Instruction(OpCode.BranchOnNotZero, a, target);
+        }
+
+        public static Instruction BranchOnEqual(Register a, Register b, int target)
+        {
+            return new Instruction(OpCode.BranchOnEqual, a, b, target);
         }
 
         public static Instruction NoOp()

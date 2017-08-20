@@ -41,6 +41,39 @@ namespace SimuNet.Tests
             Assert.AreEqual(instr.A, aReg);
             Assert.AreEqual(instr.Immediate1, 10);
 
+            instr = Instruction.Equal(aReg, bReg, cReg);
+            Assert.AreEqual(instr.Code, OpCode.Equal);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+            Assert.AreEqual(instr.C, cReg);
+
+            instr = Instruction.Jump(5);
+            Assert.AreEqual(instr.Code, OpCode.Jump);
+            Assert.AreEqual(instr.Immediate1, 5);
+            Assert.IsNull(instr.A);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
+
+            instr = Instruction.BranchOnZero(aReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnZero);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
+
+            instr = Instruction.BranchOnNotZero(aReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnNotZero);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
+
+            instr = Instruction.BranchOnEqual(aReg, bReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnEqual);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+
             instr = Instruction.NoOp();
             Assert.AreEqual(instr.Code, OpCode.NoOp);
             Assert.IsNull(instr.A);

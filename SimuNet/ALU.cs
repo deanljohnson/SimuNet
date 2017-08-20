@@ -35,11 +35,12 @@ namespace SimuNet
                     }
                     c = a / b;
                     break;
+                case OpCode.Equal:
+                    c = a == b ? 1 : 0;
+                    break;
                 case OpCode.NoOp:
                     c = 0;
                     break;
-                case OpCode.Load:
-                case OpCode.Error:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(code), code, "Given OpCode cannot be applied to these arguments");
             }

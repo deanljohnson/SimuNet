@@ -57,6 +57,11 @@ namespace SimuNet.Tests
             Assert.AreEqual(divNoneResult, 0);
             Assert.AreEqual(alu.Error, ALU.ErrorCode.DivisionByZero);
 
+            alu.DoOp(OpCode.Equal, 5, 5, out int trueEqualResult);
+            Assert.AreEqual(trueEqualResult, 1);
+            alu.DoOp(OpCode.Equal, 0, 5, out int falseEqualResult);
+            Assert.AreEqual(falseEqualResult, 0);
+
             alu.DoOp(OpCode.NoOp, 1, 1, out int noOpResult);
             Assert.AreEqual(noOpResult, 0);
 

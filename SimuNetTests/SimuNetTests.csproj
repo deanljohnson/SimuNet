@@ -57,7 +57,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ALUTests.cs" />
+    <Compile Include="CPUTests.cs" />
+    <Compile Include="InstructionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

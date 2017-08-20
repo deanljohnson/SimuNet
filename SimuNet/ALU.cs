@@ -4,14 +4,6 @@ namespace SimuNet
 {
     public class ALU
     {
-        public enum OpCode
-        {
-            AddI,
-            SubI,
-            MulI,
-            DivI
-        }
-
         public enum ErrorCode
         {
             None,
@@ -25,16 +17,16 @@ namespace SimuNet
             Error = ErrorCode.None;
             switch (code)
             {
-                case OpCode.AddI:
+                case OpCode.Add:
                     c = a + b;
                     break;
-                case OpCode.SubI:
+                case OpCode.Sub:
                     c = a - b;
                     break;
-                case OpCode.MulI:
+                case OpCode.Mul:
                     c = a * b;
                     break;
-                case OpCode.DivI:
+                case OpCode.Div:
                     if (b == 0)
                     {
                         Error = ErrorCode.DivisionByZero;
@@ -43,6 +35,11 @@ namespace SimuNet
                     }
                     c = a / b;
                     break;
+                case OpCode.NoOp:
+                    c = 0;
+                    break;
+                case OpCode.Load:
+                case OpCode.Error:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(code), code, "Given OpCode cannot be applied to these arguments");
             }

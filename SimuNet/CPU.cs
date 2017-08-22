@@ -15,6 +15,8 @@ namespace SimuNet
 
         public Program LoadedProgram { get; private set; }
 
+        public Action<string> Print;
+
         public void LoadProgram(Program prog)
         {
             LoadedProgram = prog;
@@ -49,8 +51,18 @@ namespace SimuNet
                     m_ALU.DoOp(instr.Code, instr.A.Value, instr.B.Value, out result);
                     instr.C.Value = result;
                     break;
+                case OpCode.AddI:
+                case OpCode.SubI:
+                case OpCode.MulI:
+                case OpCode.DivI:
+                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.Immediate1, out result);
+                    instr.B.Value = result;
+                    break;
                 case OpCode.Load:
                     instr.A.Value = instr.Immediate1;
+                    break;
+                case OpCode.Move:
+                    instr.B.Value = instr.A.Value;
                     break;
                 case OpCode.Jump:
                     PC.Value = instr.Immediate1 - 1;
@@ -67,11 +79,39 @@ namespace SimuNet
                     break;
                 case OpCode.BranchOnEqual:
                     m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
-                    if (result == 0)
+                    if ((m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnNotEqual:
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    if ((m_ALU.StatusFlags & ALU.Flags.Zero) != ALU.Flags.Zero)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnLessThan:
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    if ((m_ALU.StatusFlags & ALU.Flags.Negative) == ALU.Flags.Negative)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnGreaterThan:
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    if ((m_ALU.StatusFlags & ALU.Flags.Positive) == ALU.Flags.Positive)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnLessThanOrEqual:
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    if (result < 1)
+                        PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.BranchOnGreaterThanOrEqual:
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    if (result > -1)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.Exit:
                     LoadedProgram.Finished = true;
+                    break;
+                case OpCode.PrintRegister:
+                    Print?.Invoke($"{instr.A.Name}: {instr.A.Value}");
                     break;
                 case OpCode.Error:
                 default:

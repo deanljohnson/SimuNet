@@ -1,0 +1,23 @@
+﻿noop
+exit
+add V0 V1 V2
+sub V0 V1 V2
+mul V0 V1 V2
+div V0 V1 V2
+addi V0 5 V1
+subi V0 5 V1
+muli V0 5 V1
+divi V0 5 V1
+equal V0 V1 V2
+load V0 5
+move V1 V0
+jump 5
+boz PC 5
+bonz V3 5
+boe V0 V1 label
+label: bone V0 V1 5
+bolt V0 V1 5
+bogt V0 V1 5
+bogte V0 V1 5
+bolte V0 V1 5
+print V0

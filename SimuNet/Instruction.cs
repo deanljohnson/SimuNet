@@ -65,9 +65,34 @@
             return new Instruction(OpCode.Div, a, b, c);
         }
 
+        public static Instruction AddI(Register a, int immediate, Register target)
+        {
+            return new Instruction(OpCode.AddI, a, target, immediate);
+        }
+
+        public static Instruction SubI(Register a, int immediate, Register target)
+        {
+            return new Instruction(OpCode.SubI, a, target, immediate);
+        }
+
+        public static Instruction MulI(Register a, int immediate, Register target)
+        {
+            return new Instruction(OpCode.MulI, a, target, immediate);
+        }
+
+        public static Instruction DivI(Register a, int immediate, Register target)
+        {
+            return new Instruction(OpCode.DivI, a, target, immediate);
+        }
+
         public static Instruction Load(Register a, int b)
         {
             return new Instruction(OpCode.Load, a, b);
+        }
+
+        public static Instruction Move(Register a, Register b)
+        {
+            return new Instruction(OpCode.Move, a, b);
         }
 
         public static Instruction Equal(Register a, Register b, Register c)
@@ -93,6 +118,36 @@
         public static Instruction BranchOnEqual(Register a, Register b, int target)
         {
             return new Instruction(OpCode.BranchOnEqual, a, b, target);
+        }
+
+        public static Instruction BranchOnNotEqual(Register a, Register b, int target)
+        {
+            return new Instruction(OpCode.BranchOnNotEqual, a, b, target);
+        }
+
+        public static Instruction BranchOnLessThan(Register a, Register b, int target)
+        {
+            return new Instruction(OpCode.BranchOnLessThan, a, b, target);
+        }
+
+        public static Instruction BranchOnGreaterThan(Register a, Register b, int target)
+        {
+            return new Instruction(OpCode.BranchOnGreaterThan, a, b, target);
+        }
+
+        public static Instruction BranchOnLessThanOrEqual(Register a, Register b, int target)
+        {
+            return new Instruction(OpCode.BranchOnLessThanOrEqual, a, b, target);
+        }
+
+        public static Instruction BranchOnGreaterThanOrEqual(Register a, Register b, int target)
+        {
+            return new Instruction(OpCode.BranchOnGreaterThanOrEqual, a, b, target);
+        }
+
+        public static Instruction PrintRegister(Register a)
+        {
+            return new Instruction(OpCode.PrintRegister, a);
         }
 
         public static Instruction NoOp()

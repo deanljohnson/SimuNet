@@ -1,0 +1,12 @@
+﻿load V0 1
+load V1 1
+load V3 701408733
+print V0
+print V1
+loop: add V0 V1 V2
+print V2
+boe V2 V3 exit
+move V1 V0
+move V2 V1
+jump loop
+exit: exit

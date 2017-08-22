@@ -70,9 +70,39 @@ namespace SimuNetTests
             Assert.AreEqual(2, cpu.V1.Value);
             Assert.AreEqual(6, cpu.V2.Value);
 
+            instr = Instruction.AddI(cpu.V0, 5, cpu.V1);
+            cpu.V0.Value = 5;
+            cpu.Execute(instr);
+            Assert.AreEqual(5, cpu.V0.Value);
+            Assert.AreEqual(10, cpu.V1.Value);
+
+            instr = Instruction.SubI(cpu.V0, 6, cpu.V1);
+            cpu.V0.Value = 12;
+            cpu.Execute(instr);
+            Assert.AreEqual(12, cpu.V0.Value);
+            Assert.AreEqual(6, cpu.V1.Value);
+
+            instr = Instruction.MulI(cpu.V0, 7, cpu.V1);
+            cpu.V0.Value = 3;
+            cpu.Execute(instr);
+            Assert.AreEqual(3, cpu.V0.Value);
+            Assert.AreEqual(21, cpu.V1.Value);
+
+            instr = Instruction.DivI(cpu.V0, 6, cpu.V1);
+            cpu.V0.Value = 12;
+            cpu.Execute(instr);
+            Assert.AreEqual(12, cpu.V0.Value);
+            Assert.AreEqual(2, cpu.V1.Value);
+
             instr = Instruction.Load(cpu.V0, 20);
             cpu.Execute(instr);
             Assert.AreEqual(20, cpu.V0.Value);
+
+            instr = Instruction.Move(cpu.V0, cpu.V1);
+            cpu.V0.Value = 10;
+            cpu.V1.Value = 5;
+            cpu.Execute(instr);
+            Assert.AreEqual(10, cpu.V1.Value);
 
             instr = Instruction.Error();
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => cpu.Execute(instr));
@@ -177,6 +207,86 @@ namespace SimuNetTests
                 Instruction.Load(cpu.V0, 5),
                 Instruction.Load(cpu.V1, 5),
                 Instruction.BranchOnEqual(cpu.V0, cpu.V1, 4),
+                Instruction.Load(cpu.V0, 20),
+                Instruction.Exit()
+            });
+
+            cpu.LoadProgram(prog);
+            cpu.RunProgram();
+
+            Assert.AreNotEqual(20, cpu.V0.Value);
+
+            cpu = new CPU();
+            // Branch on not equal
+            prog = new Program(new List<Instruction>
+            {
+                Instruction.Load(cpu.V0, 5),
+                Instruction.Load(cpu.V1, 4),
+                Instruction.BranchOnNotEqual(cpu.V0, cpu.V1, 4),
+                Instruction.Load(cpu.V0, 20),
+                Instruction.Exit()
+            });
+
+            cpu.LoadProgram(prog);
+            cpu.RunProgram();
+
+            Assert.AreNotEqual(20, cpu.V0.Value);
+
+            cpu = new CPU();
+            // Branch on less than
+            prog = new Program(new List<Instruction>
+            {
+                Instruction.Load(cpu.V0, 4),
+                Instruction.Load(cpu.V1, 5),
+                Instruction.BranchOnLessThan(cpu.V0, cpu.V1, 4),
+                Instruction.Load(cpu.V0, 20),
+                Instruction.Exit()
+            });
+
+            cpu.LoadProgram(prog);
+            cpu.RunProgram();
+
+            Assert.AreNotEqual(20, cpu.V0.Value);
+
+            cpu = new CPU();
+            // Branch on greater than
+            prog = new Program(new List<Instruction>
+            {
+                Instruction.Load(cpu.V0, 5),
+                Instruction.Load(cpu.V1, 4),
+                Instruction.BranchOnGreaterThan(cpu.V0, cpu.V1, 4),
+                Instruction.Load(cpu.V0, 20),
+                Instruction.Exit()
+            });
+
+            cpu.LoadProgram(prog);
+            cpu.RunProgram();
+
+            Assert.AreNotEqual(20, cpu.V0.Value);
+
+            cpu = new CPU();
+            // Branch on less than or equal
+            prog = new Program(new List<Instruction>
+            {
+                Instruction.Load(cpu.V0, 5),
+                Instruction.Load(cpu.V1, 5),
+                Instruction.BranchOnLessThanOrEqual(cpu.V0, cpu.V1, 4),
+                Instruction.Load(cpu.V0, 20),
+                Instruction.Exit()
+            });
+
+            cpu.LoadProgram(prog);
+            cpu.RunProgram();
+
+            Assert.AreNotEqual(20, cpu.V0.Value);
+
+            cpu = new CPU();
+            // Branch on greater than or equal
+            prog = new Program(new List<Instruction>
+            {
+                Instruction.Load(cpu.V0, 5),
+                Instruction.Load(cpu.V1, 5),
+                Instruction.BranchOnGreaterThanOrEqual(cpu.V0, cpu.V1, 4),
                 Instruction.Load(cpu.V0, 20),
                 Instruction.Exit()
             });

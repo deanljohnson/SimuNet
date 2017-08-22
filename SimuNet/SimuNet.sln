@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimuNet", "SimuNet.csproj", "{D6FC69AD-37AF-4594-87B3-626D375A717F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimuNet", "SimuNet.csproj", "{1AF033F3-4004-463F-9F92-373ACE9B454E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimuNetAssembler", "..\SimuNetAssembler\SimuNetAssembler.csproj", "{8FCAE32F-8571-47E0-8F05-4F2401D1FDBD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimuNetTests", "..\SimuNetTests\SimuNetTests.csproj", "{9A9E8542-89B9-41EF-A379-6FC3ACF3CC89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimuNetConsole", "..\SimuNetConsole\SimuNetConsole.csproj", "{5137CFEC-93A5-4C5E-B9F5-CBD73998EEF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimuNetAssemblerTests", "..\SimuNetAssemblerTests\SimuNetAssemblerTests.csproj", "{95E9B49C-8447-4C41-88C1-C79A7278D410}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +19,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D6FC69AD-37AF-4594-87B3-626D375A717F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6FC69AD-37AF-4594-87B3-626D375A717F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6FC69AD-37AF-4594-87B3-626D375A717F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6FC69AD-37AF-4594-87B3-626D375A717F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF033F3-4004-463F-9F92-373ACE9B454E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF033F3-4004-463F-9F92-373ACE9B454E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF033F3-4004-463F-9F92-373ACE9B454E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF033F3-4004-463F-9F92-373ACE9B454E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FCAE32F-8571-47E0-8F05-4F2401D1FDBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FCAE32F-8571-47E0-8F05-4F2401D1FDBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FCAE32F-8571-47E0-8F05-4F2401D1FDBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FCAE32F-8571-47E0-8F05-4F2401D1FDBD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A9E8542-89B9-41EF-A379-6FC3ACF3CC89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A9E8542-89B9-41EF-A379-6FC3ACF3CC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A9E8542-89B9-41EF-A379-6FC3ACF3CC89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A9E8542-89B9-41EF-A379-6FC3ACF3CC89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5137CFEC-93A5-4C5E-B9F5-CBD73998EEF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5137CFEC-93A5-4C5E-B9F5-CBD73998EEF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5137CFEC-93A5-4C5E-B9F5-CBD73998EEF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5137CFEC-93A5-4C5E-B9F5-CBD73998EEF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E9B49C-8447-4C41-88C1-C79A7278D410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E9B49C-8447-4C41-88C1-C79A7278D410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E9B49C-8447-4C41-88C1-C79A7278D410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E9B49C-8447-4C41-88C1-C79A7278D410}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

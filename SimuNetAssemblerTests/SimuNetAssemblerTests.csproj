@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9A9E8542-89B9-41EF-A379-6FC3ACF3CC89}</ProjectGuid>
+    <ProjectGuid>{95E9B49C-8447-4C41-88C1-C79A7278D410}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimuNetTests</RootNamespace>
-    <AssemblyName>SimuNetTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>SimuNetAssemblerTests</RootNamespace>
+    <AssemblyName>SimuNetAssemblerTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -56,20 +56,26 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ALUTests.cs" />
-    <Compile Include="CPUTests.cs" />
-    <Compile Include="InstructionTests.cs" />
+    <Compile Include="AssemblerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SimuNetAssembler\SimuNetAssembler.csproj">
+      <Project>{8FCAE32F-8571-47E0-8F05-4F2401D1FDBD}</Project>
+      <Name>SimuNetAssembler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimuNet\SimuNet.csproj">
-      <Project>{1af033f3-4004-463f-9f92-373ace9b454e}</Project>
+      <Project>{1AF033F3-4004-463F-9F92-373ACE9B454E}</Project>
       <Name>SimuNet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Programs\successful.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -36,10 +36,39 @@ namespace SimuNet.Tests
             Assert.AreEqual(instr.B, bReg);
             Assert.AreEqual(instr.C, cReg);
 
+            instr = Instruction.AddI(aReg, 5, bReg);
+            Assert.AreEqual(instr.Code, OpCode.AddI);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+            Assert.AreEqual(instr.Immediate1, 5);
+
+            instr = Instruction.SubI(aReg, 5, bReg);
+            Assert.AreEqual(instr.Code, OpCode.SubI);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+            Assert.AreEqual(instr.Immediate1, 5);
+
+            instr = Instruction.MulI(aReg, 5,  bReg);
+            Assert.AreEqual(instr.Code, OpCode.MulI);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+            Assert.AreEqual(instr.Immediate1, 5);
+
+            instr = Instruction.DivI(aReg, 5, bReg);
+            Assert.AreEqual(instr.Code, OpCode.DivI);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+            Assert.AreEqual(instr.Immediate1, 5);
+
             instr = Instruction.Load(aReg, 10);
             Assert.AreEqual(instr.Code, OpCode.Load);
             Assert.AreEqual(instr.A, aReg);
             Assert.AreEqual(instr.Immediate1, 10);
+
+            instr = Instruction.Move(aReg, bReg);
+            Assert.AreEqual(instr.Code, OpCode.Move);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
 
             instr = Instruction.Equal(aReg, bReg, cReg);
             Assert.AreEqual(instr.Code, OpCode.Equal);
@@ -73,6 +102,42 @@ namespace SimuNet.Tests
             Assert.AreEqual(instr.Immediate1, 7);
             Assert.AreEqual(instr.A, aReg);
             Assert.AreEqual(instr.B, bReg);
+
+            instr = Instruction.BranchOnNotEqual(aReg, bReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnNotEqual);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+
+            instr = Instruction.BranchOnLessThan(aReg, bReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnLessThan);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+
+            instr = Instruction.BranchOnGreaterThan(aReg, bReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnGreaterThan);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+
+            instr = Instruction.BranchOnLessThanOrEqual(aReg, bReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnLessThanOrEqual);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+
+            instr = Instruction.BranchOnGreaterThanOrEqual(aReg, bReg, 7);
+            Assert.AreEqual(instr.Code, OpCode.BranchOnGreaterThanOrEqual);
+            Assert.AreEqual(instr.Immediate1, 7);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.AreEqual(instr.B, bReg);
+
+            instr = Instruction.PrintRegister(aReg);
+            Assert.AreEqual(instr.Code, OpCode.PrintRegister);
+            Assert.AreEqual(instr.A, aReg);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
 
             instr = Instruction.NoOp();
             Assert.AreEqual(instr.Code, OpCode.NoOp);

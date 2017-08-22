@@ -11,13 +11,26 @@
         Mul,
         Div,
 
+        AddI,
+        SubI,
+        MulI,
+        DivI,
+
         Equal,
 
         Load,
+        Move,
 
         Jump,
         BranchOnZero,
         BranchOnNotZero,
-        BranchOnEqual
+        BranchOnEqual,
+        BranchOnNotEqual,
+        BranchOnLessThan,
+        BranchOnGreaterThan,
+        BranchOnLessThanOrEqual,
+        BranchOnGreaterThanOrEqual,
+
+        PrintRegister
     }
 }

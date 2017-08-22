@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SimuNet")]
+[assembly: AssemblyTitle("SimuNetAssembler")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SimuNet")]
+[assembly: AssemblyProduct("SimuNetAssembler")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1af033f3-4004-463f-9f92-373ace9b454e")]
+[assembly: Guid("8fcae32f-8571-47e0-8f05-4f2401d1fdbd")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -18,31 +18,17 @@ namespace SimuNetAssembler
         public Program Assemble(FileInfo file)
         {
             List<Instruction> instructions = new List<Instruction>();
-            m_Labels.Clear();
 
-            using (StreamReader labelReader = file.OpenText())
-            {
-                int currentLine = -1;
-
-                while (!labelReader.EndOfStream)
-                {
-                    currentLine++;
-                    string line = labelReader.ReadLine().ToLowerInvariant();
-
-                    string[] tokens = line.Split(' ');
-
-                    if (!tokens[0].EndsWith(":"))
-                        continue;
-
-                    m_Labels[ParseLabel(tokens[0])] = currentLine;
-                }
-            }
+            ReadLabels(file);
 
             using (StreamReader reader = file.OpenText())
             {
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine().ToLowerInvariant();
+                    if (IsComment(line))
+                        continue;
+
                     string[] tokens = line.Split(' ');
 
                     string label = tokens[0].EndsWith(":") ? ParseLabel(tokens[0]) : null;
@@ -130,6 +116,37 @@ namespace SimuNetAssembler
             }
 
             return new Program(instructions);
+        }
+
+        private void ReadLabels(FileInfo file)
+        {
+            m_Labels.Clear();
+
+            using (StreamReader labelReader = file.OpenText())
+            {
+                int currentLine = -1;
+
+                while (!labelReader.EndOfStream)
+                {
+                    currentLine++;
+                    string line = labelReader.ReadLine().ToLowerInvariant();
+
+                    if (IsComment(line))
+                        continue;
+
+                    string[] tokens = line.Split(' ');
+
+                    if (!tokens[0].EndsWith(":"))
+                        continue;
+
+                    m_Labels[ParseLabel(tokens[0])] = currentLine;
+                }
+            }
+        }
+
+        private bool IsComment(string line)
+        {
+            return line.Trim().StartsWith("//");
         }
 
         private static string ParseLabel(string token)

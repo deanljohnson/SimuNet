@@ -73,6 +73,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Programs\comments-ignored.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Programs\successful.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

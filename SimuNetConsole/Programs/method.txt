@@ -2,13 +2,11 @@
 // the PC in the RA register
 
 // Execute the method the first time
-move PC RA
-addi RA 3 RA
+addi PC 2 RA
 jump method
 
 // Execute the method the second time
-move PC RA
-addi RA 3 RA
+addi PC 2 RA
 jump method
 
 exit

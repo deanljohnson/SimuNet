@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimuNet;
 
-namespace SimuNet.Tests
+namespace SimuNetTests
 {
     [TestClass]
     public class ALUTests

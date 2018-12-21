@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace SimuNet
 {
@@ -74,7 +74,7 @@ namespace SimuNet
                     break;
                 case OpCode.BranchOnNotZero:
                     m_ALU.DoOp(OpCode.Equal, instr.A.Value, 0, out result);
-                    if (result == 0)
+                    if ((m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnEqual:
@@ -99,12 +99,14 @@ namespace SimuNet
                     break;
                 case OpCode.BranchOnLessThanOrEqual:
                     m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
-                    if (result < 1)
+                    if ((m_ALU.StatusFlags & ALU.Flags.Negative) == ALU.Flags.Negative
+                        || (m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnGreaterThanOrEqual:
                     m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
-                    if (result > -1)
+                    if ((m_ALU.StatusFlags & ALU.Flags.Positive) == ALU.Flags.Positive
+                        || (m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.Exit:

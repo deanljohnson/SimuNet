@@ -1,0 +1,19 @@
+﻿// Demonstrates non-recursive method calls by storing
+// the PC in the R0 register
+
+// Execute the method the first time
+move PC R0
+addi R0 3 R0
+jump method
+
+// Execute the method the second time
+move PC R0
+addi R0 3 R0
+jump method
+
+exit
+
+method: load V1 5
+add V1 V1 V1
+print V1
+jumpr R0

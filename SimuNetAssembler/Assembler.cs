@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SimuNet;
@@ -81,6 +81,9 @@ namespace SimuNetAssembler
                             break;
                         case OpCode.Jump:
                             instructions.Add(Instruction.Jump(ParseInstructionNumber(tokens[opIndex + 1])));
+                            break;
+                        case OpCode.JumpRegister:
+                            instructions.Add(Instruction.JumpRegister(ParseRegister(tokens[opIndex + 1])));
                             break;
                         case OpCode.BranchOnZero:
                             instructions.Add(Instruction.BranchOnZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2])));
@@ -176,6 +179,7 @@ namespace SimuNetAssembler
                 case "load": return OpCode.Load;
                 case "move": return OpCode.Move;
                 case "jump": return OpCode.Jump;
+                case "jumpr": return OpCode.JumpRegister;
                 case "boz": return OpCode.BranchOnZero;
                 case "bonz": return OpCode.BranchOnNotZero;
                 case "boe": return OpCode.BranchOnEqual;
@@ -196,6 +200,7 @@ namespace SimuNetAssembler
             if (m_CPU.V2.Name.ToLowerInvariant() == token) return m_CPU.V2;
             if (m_CPU.V3.Name.ToLowerInvariant() == token) return m_CPU.V3;
             if (m_CPU.PC.Name.ToLowerInvariant() == token) return m_CPU.PC;
+            if (m_CPU.R0.Name.ToLowerInvariant() == token) return m_CPU.R0;
             throw new ArgumentException($"Unrecognized register {token}", nameof(token));
         }
 

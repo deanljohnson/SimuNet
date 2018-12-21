@@ -123,6 +123,11 @@
             return new Instruction(OpCode.Jump, a);
         }
 
+        public static Instruction JumpRegister(Register a)
+        {
+            return new Instruction(OpCode.JumpRegister, a);
+        }
+
         public static Instruction BranchOnZero(Register a, int target)
         {
             return new Instruction(OpCode.BranchOnZero, a, target);

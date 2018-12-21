@@ -22,6 +22,7 @@
         Move,
 
         Jump,
+        JumpRegister,
         BranchOnZero,
         BranchOnNotZero,
         BranchOnEqual,

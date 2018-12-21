@@ -104,6 +104,13 @@ namespace SimuNetTests
             cpu.Execute(instr);
             Assert.AreEqual(10, cpu.V1.Value);
 
+            instr = Instruction.JumpRegister(cpu.V0);
+            cpu.V0.Value = 10;
+            cpu.Execute(instr);
+            // 1 less than the target register because the CPU will
+            // increment this before moving to the next instruction.
+            Assert.AreEqual(9, cpu.PC.Value);
+
             instr = Instruction.Error();
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => cpu.Execute(instr));
         }

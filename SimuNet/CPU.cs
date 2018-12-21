@@ -10,12 +10,18 @@ namespace SimuNet
     {
         private readonly ALU m_ALU = new ALU();
 
+        /// <summary>
+        /// The program counter register. This register stores
+        /// the location of the currently executing instruction.
+        /// </summary>
         public Register PC { get; } = new Register("PC");
 
         public Register V0 { get; } = new Register("V0");
         public Register V1 { get; } = new Register("V1");
         public Register V2 { get; } = new Register("V2");
         public Register V3 { get; } = new Register("V3");
+
+        public Register R0 { get; } = new Register("R0");
 
         /// <summary>
         /// The currently loaded <see cref="Program"/>
@@ -83,6 +89,9 @@ namespace SimuNet
                     break;
                 case OpCode.Jump:
                     PC.Value = instr.Immediate1 - 1;
+                    break;
+                case OpCode.JumpRegister:
+                    PC.Value = instr.A.Value - 1;
                     break;
                 case OpCode.BranchOnZero:
                     m_ALU.DoOp(OpCode.Equal, instr.A.Value, 0, out result);

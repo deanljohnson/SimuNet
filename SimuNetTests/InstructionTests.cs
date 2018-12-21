@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SimuNet.Tests
 {
@@ -80,6 +80,12 @@ namespace SimuNet.Tests
             Assert.AreEqual(instr.Code, OpCode.Jump);
             Assert.AreEqual(instr.Immediate1, 5);
             Assert.IsNull(instr.A);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
+
+            instr = Instruction.JumpRegister(aReg);
+            Assert.AreEqual(instr.Code, OpCode.JumpRegister);
+            Assert.AreEqual(instr.A, aReg);
             Assert.IsNull(instr.B);
             Assert.IsNull(instr.C);
 

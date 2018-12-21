@@ -17,14 +17,14 @@ namespace SimuNetTests
             Assert.IsNotNull(cpu.V1);
             Assert.IsNotNull(cpu.V2);
             Assert.IsNotNull(cpu.V3);
-            Assert.IsNotNull(cpu.R0);
+            Assert.IsNotNull(cpu.RA);
             Assert.IsNotNull(cpu.SP);
 
             Assert.AreEqual(cpu.V0.Name, "V0");
             Assert.AreEqual(cpu.V1.Name, "V1");
             Assert.AreEqual(cpu.V2.Name, "V2");
             Assert.AreEqual(cpu.V3.Name, "V3");
-            Assert.AreEqual(cpu.R0.Name, "R0");
+            Assert.AreEqual(cpu.RA.Name, "RA");
             Assert.AreEqual(cpu.SP.Name, "SP");
 
             Assert.AreEqual(0, cpu.V0.Value);

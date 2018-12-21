@@ -230,7 +230,7 @@ namespace SimuNetAssembler
             if (m_CPU.V2.Name.ToLowerInvariant() == token) return m_CPU.V2;
             if (m_CPU.V3.Name.ToLowerInvariant() == token) return m_CPU.V3;
             if (m_CPU.PC.Name.ToLowerInvariant() == token) return m_CPU.PC;
-            if (m_CPU.R0.Name.ToLowerInvariant() == token) return m_CPU.R0;
+            if (m_CPU.RA.Name.ToLowerInvariant() == token) return m_CPU.RA;
             if (m_CPU.SP.Name.ToLowerInvariant() == token) return m_CPU.SP;
             throw new ArgumentException($"Unrecognized register {token}", nameof(token));
         }

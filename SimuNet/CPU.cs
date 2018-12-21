@@ -35,11 +35,11 @@ namespace SimuNet
         public Register V3 { get; } = new Register("V3");
 
         /// <summary>
-        /// The return value register. Before performing method calls, programs must
+        /// The return address register. Before performing method calls, programs must
         /// store the instruction to return to in this register. Methods are then
         /// expected to jump to this register when method execution is finished.
         /// </summary>
-        public Register R0 { get; } = new Register("R0");
+        public Register RA { get; } = new Register("RA");
 
         /// <summary>
         /// The stack pointer register.

@@ -59,6 +59,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Programs\stack-usage.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Programs\test.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

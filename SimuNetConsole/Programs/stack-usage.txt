@@ -1,0 +1,63 @@
+﻿// Demonstrates the usage of the stack when making method calls
+// and how to get return values from a method. Executes the method
+// twice to show a complete example of returning the stack to its
+// original state pre-method call to prepare for another call
+
+// Load values that will be passed to the method
+load V0 5
+load V1 5
+
+// Push the method arguments onto the stack and move the stack pointer
+push V0 0
+push V1 1
+addi SP 2 SP
+
+// Call the add method
+addi PC 2 RA
+jump add-method
+
+// Get the return value
+pop V0 -1
+// Move the stack to throw out the
+// arguments to the method and its return value
+subi SP 3 SP
+print V0
+
+// Load values that will be passed to the method
+load V0 7
+load V1 7
+
+// Push the method arguments onto the stack and move the stack pointer
+push V0 0
+push V1 1
+addi SP 2 SP
+
+// Call the add method
+addi PC 2 RA
+jump add-method
+
+// Get the return value
+pop V0 -1
+// Move the stack to throw out the
+// arguments to the method and its return value
+subi SP 3 SP
+print V0
+
+exit
+
+
+
+add-method: noop
+// Take our arguments off of the stack
+pop V0 -2
+pop V1 -1
+
+// Perform the add
+add V0 V1 V0
+
+// Push our return value and move the stack pointer
+push V0 0
+addi SP 1 SP
+
+// Return from the function
+jumpr RA

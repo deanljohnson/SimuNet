@@ -1,0 +1,46 @@
+﻿// Demonstrates calculating and printing fibonacci numbers
+// using recursive method calls.
+
+load V0 1
+load V1 1
+load v3 200 // Compute fibonacci numbers up until we pass this point.
+
+// Setup method call stack frame
+push V0 0
+push V1 1
+push V3 2
+addi SP 3 SP
+
+// Call fib method
+addi PC 2 RA
+jump fib
+
+subi SP 3 SP // Destroy method call stack frame
+exit
+
+
+fib:
+// Get arguments
+pop V0 -3 // First number
+pop V1 -2 // Second number
+pop V3 -1 // Limit
+
+add V0 V1 V2
+print V2
+bogte V2 V3 fib-return
+
+// Recursive call
+push RA 0 // Push our return address onto the stack
+push V1 1 // First argument
+push V2 2 // Second argument
+push V3 3 // Third argument (limit)
+addi SP 4 SP // move stack pointer
+
+addi PC 2 RA
+jump fib
+
+pop RA -4 // Restore our return address
+subi SP 4 SP // Destroy method call stack frame
+
+fib-return:
+jumpr RA

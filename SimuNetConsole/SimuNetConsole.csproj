@@ -59,6 +59,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Programs\fib-recursive.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Programs\stack-usage.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using SimuNet;
@@ -26,6 +26,8 @@ namespace SimuNetAssembler
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine().ToLowerInvariant();
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
                     if (IsComment(line))
                         continue;
 
@@ -134,8 +136,12 @@ namespace SimuNetAssembler
                     currentLine++;
                     string line = labelReader.ReadLine().ToLowerInvariant();
 
-                    if (IsComment(line))
+                    if (string.IsNullOrWhiteSpace(line)
+                        || IsComment(line))
+                    {
+                        currentLine--;
                         continue;
+                    }
 
                     string[] tokens = line.Split(' ');
 

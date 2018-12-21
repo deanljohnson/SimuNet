@@ -10,6 +10,8 @@ namespace SimuNetAssembler.Tests
         [TestMethod]
         public void AssembleTest()
         {
+            // Assemble a file with all supported instructions.
+            // Just testing for exceptions at this point.
             Assembler assem = new Assembler(new CPU());
             assem.Assemble(new FileInfo("Programs/successful.txt"));
         }

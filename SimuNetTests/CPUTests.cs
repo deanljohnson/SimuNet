@@ -17,16 +17,21 @@ namespace SimuNetTests
             Assert.IsNotNull(cpu.V1);
             Assert.IsNotNull(cpu.V2);
             Assert.IsNotNull(cpu.V3);
+            Assert.IsNotNull(cpu.R0);
+            Assert.IsNotNull(cpu.SP);
 
             Assert.AreEqual(cpu.V0.Name, "V0");
             Assert.AreEqual(cpu.V1.Name, "V1");
             Assert.AreEqual(cpu.V2.Name, "V2");
             Assert.AreEqual(cpu.V3.Name, "V3");
+            Assert.AreEqual(cpu.R0.Name, "R0");
+            Assert.AreEqual(cpu.SP.Name, "SP");
 
             Assert.AreEqual(0, cpu.V0.Value);
             Assert.AreEqual(0, cpu.V1.Value);
             Assert.AreEqual(0, cpu.V2.Value);
             Assert.AreEqual(0, cpu.V3.Value);
+            Assert.AreEqual(0, cpu.SP.Value);
         }
 
         [TestMethod]
@@ -323,6 +328,22 @@ namespace SimuNetTests
                 cpu.Execute(Instruction.Pop(cpu.V1, -i - 1));
                 Assert.AreEqual(STACK_SIZE - i - 1, cpu.V1.Value);
             }
+        }
+
+        [TestMethod]
+        public void CPUShiftOperations()
+        {
+            CPU cpu = new CPU();
+            cpu.V0.Value = 1;
+            cpu.V1.Value = 1;
+            cpu.Execute(Instruction.LeftShift(cpu.V0, cpu.V1, cpu.V0));
+            Assert.AreEqual(2, cpu.V0.Value);
+            cpu.Execute(Instruction.RightShift(cpu.V0, cpu.V1, cpu.V0));
+            Assert.AreEqual(1, cpu.V0.Value);
+            cpu.Execute(Instruction.LeftShiftI(cpu.V0, 1, cpu.V0));
+            Assert.AreEqual(2, cpu.V0.Value);
+            cpu.Execute(Instruction.RightShiftI(cpu.V0, 1, cpu.V0));
+            Assert.AreEqual(1, cpu.V0.Value);
         }
     }
 }

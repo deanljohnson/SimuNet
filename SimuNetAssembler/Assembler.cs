@@ -60,6 +60,12 @@ namespace SimuNetAssembler
                         case OpCode.Div:
                             instructions.Add(Instruction.Div(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
                             break;
+                        case OpCode.LeftShift:
+                            instructions.Add(Instruction.LeftShift(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
+                            break;
+                        case OpCode.RightShift:
+                            instructions.Add(Instruction.RightShift(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
+                            break;
                         case OpCode.AddI:
                             instructions.Add(Instruction.AddI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
                             break;
@@ -71,6 +77,12 @@ namespace SimuNetAssembler
                             break;
                         case OpCode.DivI:
                             instructions.Add(Instruction.DivI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
+                            break;
+                        case OpCode.LeftShiftI:
+                            instructions.Add(Instruction.LeftShiftI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
+                            break;
+                        case OpCode.RightShiftI:
+                            instructions.Add(Instruction.RightShiftI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
                             break;
                         case OpCode.Equal:
                             instructions.Add(Instruction.Equal(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
@@ -183,10 +195,14 @@ namespace SimuNetAssembler
                 case "sub": return OpCode.Sub;
                 case "mul": return OpCode.Mul;
                 case "div": return OpCode.Div;
+                case "ls": return OpCode.LeftShift;
+                case "rs": return OpCode.RightShift;
                 case "addi": return OpCode.AddI;
                 case "subi": return OpCode.SubI;
                 case "muli": return OpCode.MulI;
                 case "divi": return OpCode.DivI;
+                case "lsi": return OpCode.LeftShiftI;
+                case "rsi": return OpCode.RightShiftI;
                 case "equal": return OpCode.Equal;
                 case "load": return OpCode.Load;
                 case "move": return OpCode.Move;

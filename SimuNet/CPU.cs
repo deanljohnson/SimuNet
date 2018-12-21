@@ -94,6 +94,8 @@ namespace SimuNet
                 case OpCode.Sub:
                 case OpCode.Mul:
                 case OpCode.Div:
+                case OpCode.LeftShift:
+                case OpCode.RightShift:
                 case OpCode.Equal:
                     m_ALU.DoOp(instr.Code, instr.A.Value, instr.B.Value, out result);
                     instr.C.Value = result;
@@ -102,6 +104,8 @@ namespace SimuNet
                 case OpCode.SubI:
                 case OpCode.MulI:
                 case OpCode.DivI:
+                case OpCode.LeftShiftI:
+                case OpCode.RightShiftI:
                     m_ALU.DoOp(instr.Code, instr.A.Value, instr.Immediate1, out result);
                     instr.B.Value = result;
                     break;

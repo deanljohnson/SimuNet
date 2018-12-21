@@ -103,6 +103,26 @@
             return new Instruction(OpCode.DivI, a, target, immediate);
         }
 
+        public static Instruction LeftShift(Register source, Register shiftAmountRegister, Register target)
+        {
+            return new Instruction(OpCode.LeftShift, source, shiftAmountRegister, target);
+        }
+
+        public static Instruction RightShift(Register source, Register shiftAmountRegister, Register target)
+        {
+            return new Instruction(OpCode.RightShift, source, shiftAmountRegister, target);
+        }
+
+        public static Instruction LeftShiftI(Register source, int shiftAmount, Register target)
+        {
+            return new Instruction(OpCode.LeftShiftI, source, target, shiftAmount);
+        }
+
+        public static Instruction RightShiftI(Register source, int shiftAmount, Register target)
+        {
+            return new Instruction(OpCode.RightShiftI, source, target, shiftAmount);
+        }
+
         public static Instruction Load(Register a, int b)
         {
             return new Instruction(OpCode.Load, a, b);

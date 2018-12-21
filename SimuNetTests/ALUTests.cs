@@ -58,6 +58,15 @@ namespace SimuNetTests
             Assert.AreEqual(divNoneResult, 0);
             Assert.AreEqual(alu.Error, ALU.ErrorCode.DivisionByZero);
 
+            alu.DoOp(OpCode.LeftShift, 1, 1, out int leftShiftResult);
+            Assert.AreEqual(2, leftShiftResult);
+            alu.DoOp(OpCode.RightShift, 2, 1, out int rightShiftResult);
+            Assert.AreEqual(1, rightShiftResult);
+            alu.DoOp(OpCode.LeftShiftI, 1, 1, out int leftShiftIResult);
+            Assert.AreEqual(2, leftShiftIResult);
+            alu.DoOp(OpCode.RightShiftI, 2, 1, out int rightShiftIResult);
+            Assert.AreEqual(1, rightShiftIResult);
+
             alu.DoOp(OpCode.NoOp, 1, 1, out int noOpResult);
             Assert.AreEqual(noOpResult, 0);
 

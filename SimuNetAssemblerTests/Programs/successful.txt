@@ -4,10 +4,14 @@ add V0 V1 V2
 sub V0 V1 V2
 mul V0 V1 V2
 div V0 V1 V2
+ls V3 V3 V3
+rs V3 V3 V3
 addi V0 5 V1
 subi V0 5 V1
 muli V0 5 V1
 divi V0 5 V1
+lsi V3 1 V3
+rsi V3 1 V3
 equal V0 V1 V2
 load V0 5
 move V1 V0

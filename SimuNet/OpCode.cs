@@ -16,6 +16,11 @@
         MulI,
         DivI,
 
+        LeftShift,
+        RightShift,
+        LeftShiftI,
+        RightShiftI,
+
         Equal,
 
         Load,

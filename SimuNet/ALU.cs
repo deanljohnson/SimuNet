@@ -75,6 +75,14 @@ namespace SimuNet
                     }
                     c = a / b;
                     break;
+                case OpCode.LeftShift:
+                case OpCode.LeftShiftI:
+                    c = a << b;
+                    break;
+                case OpCode.RightShift:
+                case OpCode.RightShiftI:
+                    c = a >> b;
+                    break;
                 case OpCode.NoOp:
                     c = 0;
                     break;

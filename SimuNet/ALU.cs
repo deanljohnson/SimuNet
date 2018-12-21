@@ -2,11 +2,21 @@
 
 namespace SimuNet
 {
+    /// <summary>
+    /// Simulates an arithmetic logic unit (ALU). The ALU executes
+    /// basic mathematic instructions such as addition and multiplication.
+    /// </summary>
     public class ALU
     {
         public enum ErrorCode
         {
+            /// <summary>
+            /// No error occured.
+            /// </summary>
             None,
+            /// <summary>
+            /// An attempt to divide by zero was made.
+            /// </summary>
             DivisionByZero
         }
 
@@ -14,12 +24,28 @@ namespace SimuNet
         public enum Flags
         {
             None = 0,
+            /// <summary>
+            /// The result of the last operation was zero.
+            /// </summary>
             Zero = 1 << 1,
+            /// <summary>
+            /// The result of the last operation was positive.
+            /// </summary>
             Positive = 1 << 2,
+            /// <summary>
+            /// The result of the last operation was negative.
+            /// </summary>
             Negative = 1 << 3
         }
 
+        /// <summary>
+        /// The error, if any, associated with the last invocation of <see cref="DoOp"/>.
+        /// </summary>
         public ErrorCode Error { get; private set; }
+
+        /// <summary>
+        /// Flags providing additional information on the last invocation of <see cref="DoOp"/>.
+        /// </summary>
         public Flags StatusFlags { get; private set; }
 
         public void DoOp(OpCode code, int a, int b, out int c)

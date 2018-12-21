@@ -1,12 +1,30 @@
 ﻿namespace SimuNet
 {
+    /// <summary>
+    /// A single instruction CPU instruction.
+    /// </summary>
     public class Instruction
     {
+        /// <summary>
+        /// The operation code of this instruction.
+        /// </summary>
         public OpCode Code { get; }
+        /// <summary>
+        /// The first register used by this instruction. May be null.
+        /// </summary>
         public Register A { get; }
+        /// <summary>
+        /// The second register used by this instruction. May be null.
+        /// </summary>
         public Register B { get; }
+        /// <summary>
+        /// The third register used by this instruction. May be null.
+        /// </summary>
         public Register C { get; }
-
+        /// <summary>
+        /// The 'immediate' value loaded with this instruction. Immediate values
+        /// are integer constants written directly in the assembly code.
+        /// </summary>
         public int Immediate1 { get; }
 
         private Instruction(OpCode opCode, Register a = null, Register b = null, Register c = null)

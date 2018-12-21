@@ -1,7 +1,11 @@
-using System;
+﻿using System;
 
 namespace SimuNet
 {
+    /// <summary>
+    /// Simulates a center processing unit (CPU). A CPU loads and executes a program
+    /// and provides registers in which data is stored.
+    /// </summary>
     public class CPU
     {
         private readonly ALU m_ALU = new ALU();
@@ -13,15 +17,28 @@ namespace SimuNet
         public Register V2 { get; } = new Register("V2");
         public Register V3 { get; } = new Register("V3");
 
+        /// <summary>
+        /// The currently loaded <see cref="Program"/>
+        /// or null if none is loaded.
+        /// </summary>
         public Program LoadedProgram { get; private set; }
 
         public Action<string> Print;
 
+        /// <summary>
+        /// Loads the given program into the CPU.
+        /// </summary>
+        /// <param name="prog">The <see cref="Program"/> to load.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="prog"/> was null</exception>
         public void LoadProgram(Program prog)
         {
-            LoadedProgram = prog;
+            LoadedProgram = prog ?? throw new ArgumentNullException(nameof(prog));
         }
 
+        /// <summary>
+        /// Runs the currently loaded program.
+        /// </summary>
+        /// <exception cref="InvalidOperationException"><see cref="LoadedProgram"/> is null.</exception>
         public void RunProgram()
         {
             if (LoadedProgram == null)
@@ -36,7 +53,7 @@ namespace SimuNet
             }
         }
 
-        public void Execute(Instruction instr)
+        internal void Execute(Instruction instr)
         {
             int result;
             switch (instr.Code)

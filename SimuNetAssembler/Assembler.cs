@@ -23,9 +23,12 @@ namespace SimuNetAssembler
 
             using (StreamReader reader = file.OpenText())
             {
+                int lineNumber = 0;
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine().ToLowerInvariant();
+                    lineNumber++;
+
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
                     if (IsComment(line))
@@ -33,122 +36,102 @@ namespace SimuNetAssembler
 
                     string[] tokens = line.Split(' ');
 
-                    string label = tokens[0].EndsWith(":") ? ParseLabel(tokens[0]) : null;
-
-                    // If this line has a label but no instruction,
-                    // such as "label:", insert a No-Op instruction on the line.
-                    // Keeps label jumps simple.
-                    if (label != null && tokens.Length == 1)
+                    try
                     {
-                        instructions.Add(Instruction.NoOp());
-                        continue;
+                        instructions.Add(ParseInstruction(tokens));
                     }
-
-                    int opIndex = label == null ? 0 : 1;
-                    OpCode op = ParseOpCode(tokens[opIndex]);
-
-                    switch (op)
+                    catch (ArgumentException e)
                     {
-                        case OpCode.Error:
-                            instructions.Add(Instruction.Error());
-                            break;
-                        case OpCode.NoOp:
-                            instructions.Add(Instruction.NoOp());
-                            break;
-                        case OpCode.Exit:
-                            instructions.Add(Instruction.Exit());
-                            break;
-                        case OpCode.Add:
-                            instructions.Add(Instruction.Add(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.Sub:
-                            instructions.Add(Instruction.Sub(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.Mul:
-                            instructions.Add(Instruction.Mul(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.Div:
-                            instructions.Add(Instruction.Div(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.LeftShift:
-                            instructions.Add(Instruction.LeftShift(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.RightShift:
-                            instructions.Add(Instruction.RightShift(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.AddI:
-                            instructions.Add(Instruction.AddI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.SubI:
-                            instructions.Add(Instruction.SubI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.MulI:
-                            instructions.Add(Instruction.MulI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.DivI:
-                            instructions.Add(Instruction.DivI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.LeftShiftI:
-                            instructions.Add(Instruction.LeftShiftI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.RightShiftI:
-                            instructions.Add(Instruction.RightShiftI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.Equal:
-                            instructions.Add(Instruction.Equal(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.Load:
-                            instructions.Add(Instruction.Load(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2])));
-                            break;
-                        case OpCode.Move:
-                            instructions.Add(Instruction.Move(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2])));
-                            break;
-                        case OpCode.Push:
-                            instructions.Add(Instruction.Push(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2])));
-                            break;
-                        case OpCode.Pop:
-                            instructions.Add(Instruction.Pop(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2])));
-                            break;
-                        case OpCode.Jump:
-                            instructions.Add(Instruction.Jump(ParseInstructionNumber(tokens[opIndex + 1])));
-                            break;
-                        case OpCode.JumpRegister:
-                            instructions.Add(Instruction.JumpRegister(ParseRegister(tokens[opIndex + 1])));
-                            break;
-                        case OpCode.BranchOnZero:
-                            instructions.Add(Instruction.BranchOnZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2])));
-                            break;
-                        case OpCode.BranchOnNotZero:
-                            instructions.Add(Instruction.BranchOnNotZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2])));
-                            break;
-                        case OpCode.BranchOnEqual:
-                            instructions.Add(Instruction.BranchOnEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.BranchOnNotEqual:
-                            instructions.Add(Instruction.BranchOnNotEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.BranchOnLessThan:
-                            instructions.Add(Instruction.BranchOnLessThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.BranchOnGreaterThan:
-                            instructions.Add(Instruction.BranchOnGreaterThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.BranchOnLessThanOrEqual:
-                            instructions.Add(Instruction.BranchOnLessThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.BranchOnGreaterThanOrEqual:
-                            instructions.Add(Instruction.BranchOnGreaterThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3])));
-                            break;
-                        case OpCode.PrintRegister:
-                            instructions.Add(Instruction.PrintRegister(ParseRegister(tokens[opIndex + 1])));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException($"Parsing line {lineNumber} failed: {e.Message}");
                     }
                 }
             }
 
             return new Program(instructions);
+        }
+
+        private Instruction ParseInstruction(string[] tokens)
+        {
+            string label = tokens[0].EndsWith(":") ? ParseLabel(tokens[0]) : null;
+
+            // If this line has a label but no instruction,
+            // such as "label:", insert a No-Op instruction on the line.
+            // Keeps label jumps simple.
+            if (label != null && tokens.Length == 1)
+            {
+                return Instruction.NoOp();
+            }
+
+            int opIndex = label == null ? 0 : 1;
+            OpCode op = ParseOpCode(tokens[opIndex]);
+
+            switch (op)
+            {
+                case OpCode.Error:
+                    return Instruction.Error();
+                case OpCode.NoOp:
+                    return Instruction.NoOp();
+                case OpCode.Exit:
+                    return Instruction.Exit();
+                case OpCode.Add:
+                    return Instruction.Add(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.Sub:
+                    return Instruction.Sub(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.Mul:
+                    return Instruction.Mul(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.Div:
+                    return Instruction.Div(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.LeftShift:
+                    return Instruction.LeftShift(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.RightShift:
+                    return Instruction.RightShift(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.AddI:
+                    return Instruction.AddI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.SubI:
+                    return Instruction.SubI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.MulI:
+                    return Instruction.MulI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.DivI:
+                    return Instruction.DivI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.LeftShiftI:
+                    return Instruction.LeftShiftI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.RightShiftI:
+                    return Instruction.RightShiftI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.Equal:
+                    return Instruction.Equal(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
+                case OpCode.Load:
+                    return Instruction.Load(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                case OpCode.Move:
+                    return Instruction.Move(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]));
+                case OpCode.Push:
+                    return Instruction.Push(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                case OpCode.Pop:
+                    return Instruction.Pop(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                case OpCode.Jump:
+                    return Instruction.Jump(ParseInstructionNumber(tokens[opIndex + 1]));
+                case OpCode.JumpRegister:
+                    return Instruction.JumpRegister(ParseRegister(tokens[opIndex + 1]));
+                case OpCode.BranchOnZero:
+                    return Instruction.BranchOnZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2]));
+                case OpCode.BranchOnNotZero:
+                    return Instruction.BranchOnNotZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2]));
+                case OpCode.BranchOnEqual:
+                    return Instruction.BranchOnEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                case OpCode.BranchOnNotEqual:
+                    return Instruction.BranchOnNotEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                case OpCode.BranchOnLessThan:
+                    return Instruction.BranchOnLessThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                case OpCode.BranchOnGreaterThan:
+                    return Instruction.BranchOnGreaterThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                case OpCode.BranchOnLessThanOrEqual:
+                    return Instruction.BranchOnLessThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                case OpCode.BranchOnGreaterThanOrEqual:
+                    return Instruction.BranchOnGreaterThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                case OpCode.PrintRegister:
+                    return Instruction.PrintRegister(ParseRegister(tokens[opIndex + 1]));
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void ReadLabels(FileInfo file)
@@ -249,7 +232,7 @@ namespace SimuNetAssembler
         {
             if (int.TryParse(token, out int i))
                 return i;
-            throw new ArgumentException($"Invalid immediate value: {token}", nameof(token));
+            throw new ArgumentException($"Invalid immediate value {token}", nameof(token));
         }
 
         private int ParseInstructionNumber(string token)
@@ -259,7 +242,7 @@ namespace SimuNetAssembler
             if (m_Labels.TryGetValue(token, out i))
                 return i;
 
-            throw new KeyNotFoundException($"Could not find a line number for the given label {token}");
+            throw new KeyNotFoundException($"Could not find a line number for the label {token}");
         }
     }
 }

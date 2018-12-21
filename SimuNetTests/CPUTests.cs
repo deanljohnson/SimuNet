@@ -188,7 +188,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreEqual(5, cpu.V0.Value);
+            Assert.AreNotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on not zero
@@ -205,7 +205,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreEqual(5, cpu.V0.Value);
+            Assert.AreNotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on equal

@@ -63,6 +63,15 @@
             Immediate1 = immediate1;
         }
 
+        public override string ToString()
+        {
+            return $"{Code}"
+                + $"{(A?.Name == null ? "" : " " + A.Name)}"
+                + $"{(B?.Name == null ? "" : " " + B.Name)}"
+                + $"{(C?.Name == null ? "" : " " + C.Name)}"
+                + $" I: {Immediate1}";
+        }
+
         public static Instruction Add(Register a, Register b, Register c)
         {
             return new Instruction(OpCode.Add, a, b, c);

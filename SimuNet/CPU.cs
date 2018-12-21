@@ -124,13 +124,13 @@ namespace SimuNet
                     PC.Value = instr.A.Value - 1;
                     break;
                 case OpCode.BranchOnZero:
-                    m_ALU.DoOp(OpCode.Equal, instr.A.Value, 0, out result);
-                    if (result == 1)
+                    m_ALU.DoOp(OpCode.SubI, instr.A.Value, 0, out result);
+                    if ((m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnNotZero:
-                    m_ALU.DoOp(OpCode.Equal, instr.A.Value, 0, out result);
-                    if ((m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
+                    m_ALU.DoOp(OpCode.SubI, instr.A.Value, 0, out result);
+                    if ((m_ALU.StatusFlags & ALU.Flags.Zero) != ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnEqual:

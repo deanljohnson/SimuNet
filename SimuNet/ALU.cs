@@ -75,9 +75,6 @@ namespace SimuNet
                     }
                     c = a / b;
                     break;
-                case OpCode.Equal:
-                    c = a == b ? 1 : 0;
-                    break;
                 case OpCode.NoOp:
                     c = 0;
                     break;

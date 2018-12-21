@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace SimuNet
 {
+    /// <summary>
+    /// Represents a single program that can
+    /// be loaded onto a CPU and executed.
+    /// </summary>
     public class Program
     {
         private readonly List<Instruction> m_Instructions;

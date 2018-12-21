@@ -21,6 +21,9 @@
         Load,
         Move,
 
+        Push,
+        Pop,
+
         Jump,
         JumpRegister,
         BranchOnZero,

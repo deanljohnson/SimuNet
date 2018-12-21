@@ -118,6 +118,16 @@
             return new Instruction(OpCode.Equal, a, b, c);
         }
 
+        public static Instruction Push(Register source, int offset)
+        {
+            return new Instruction(OpCode.Push, source, offset);
+        }
+
+        public static Instruction Pop(Register target, int offset)
+        {
+            return new Instruction(OpCode.Pop, target, offset);
+        }
+
         public static Instruction Jump(int a)
         {
             return new Instruction(OpCode.Jump, a);

@@ -77,6 +77,20 @@ namespace SimuNetTests
             Assert.AreEqual(instr.B, bReg);
             Assert.AreEqual(instr.C, cReg);
 
+            instr = Instruction.Push(aReg, 10);
+            Assert.AreEqual(instr.Code, OpCode.Push);
+            Assert.AreEqual(instr.Immediate1, 10);
+            Assert.AreEqual(aReg, instr.A);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
+
+            instr = Instruction.Pop(aReg, 10);
+            Assert.AreEqual(instr.Code, OpCode.Pop);
+            Assert.AreEqual(instr.Immediate1, 10);
+            Assert.AreEqual(aReg, instr.A);
+            Assert.IsNull(instr.B);
+            Assert.IsNull(instr.C);
+
             instr = Instruction.Jump(5);
             Assert.AreEqual(instr.Code, OpCode.Jump);
             Assert.AreEqual(instr.Immediate1, 5);

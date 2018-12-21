@@ -303,5 +303,26 @@ namespace SimuNetTests
 
             Assert.AreNotEqual(20, cpu.V0.Value);
         }
+
+        [TestMethod]
+        public void CPUStack()
+        {
+            const int STACK_SIZE = 1024;
+            CPU cpu = new CPU();
+
+            for (int i = 0; i < STACK_SIZE; i++)
+            {
+                cpu.Execute(Instruction.Load(cpu.V0, i));
+                cpu.Execute(Instruction.Push(cpu.V0, i));
+            }
+
+            cpu.Execute(Instruction.AddI(cpu.SP, STACK_SIZE, cpu.SP));
+
+            for (int i = 0; i < STACK_SIZE; i++)
+            {
+                cpu.Execute(Instruction.Pop(cpu.V1, -i - 1));
+                Assert.AreEqual(STACK_SIZE - i - 1, cpu.V1.Value);
+            }
+        }
     }
 }

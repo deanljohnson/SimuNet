@@ -9,6 +9,7 @@ namespace SimuNet
     public class CPU
     {
         private readonly ALU m_ALU = new ALU();
+        private readonly Stack m_Stack = new Stack(1024);
 
         /// <summary>
         /// The program counter register. This register stores
@@ -41,6 +42,11 @@ namespace SimuNet
         public Register R0 { get; } = new Register("R0");
 
         /// <summary>
+        /// The stack pointer register.
+        /// </summary>
+        public Register SP { get; } = new Register("SP");
+
+        /// <summary>
         /// The currently loaded <see cref="Program"/>
         /// or null if none is loaded.
         /// </summary>
@@ -68,6 +74,7 @@ namespace SimuNet
                 throw new InvalidOperationException("Cannot run a program until one is loaded");
 
             PC.Value = 0;
+            SP.Value = 0;
 
             while (!LoadedProgram.Finished)
             {
@@ -103,6 +110,12 @@ namespace SimuNet
                     break;
                 case OpCode.Move:
                     instr.B.Value = instr.A.Value;
+                    break;
+                case OpCode.Push:
+                    m_Stack[SP.Value + instr.Immediate1] = instr.A.Value;
+                    break;
+                case OpCode.Pop:
+                    instr.A.Value = m_Stack[SP.Value + instr.Immediate1];
                     break;
                 case OpCode.Jump:
                     PC.Value = instr.Immediate1 - 1;

@@ -34,6 +34,16 @@ namespace SimuNetAssembler
                     string[] tokens = line.Split(' ');
 
                     string label = tokens[0].EndsWith(":") ? ParseLabel(tokens[0]) : null;
+
+                    // If this line has a label but no instruction,
+                    // such as "label:", insert a No-Op instruction on the line.
+                    // Keeps label jumps simple.
+                    if (label != null && tokens.Length == 1)
+                    {
+                        instructions.Add(Instruction.NoOp());
+                        continue;
+                    }
+
                     int opIndex = label == null ? 0 : 1;
                     OpCode op = ParseOpCode(tokens[opIndex]);
 

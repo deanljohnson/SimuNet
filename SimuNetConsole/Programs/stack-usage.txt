@@ -47,7 +47,7 @@ exit
 
 
 
-add-method: noop
+add-method:
 // Take our arguments off of the stack
 pop V0 -2
 pop V1 -1

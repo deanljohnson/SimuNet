@@ -11,7 +11,8 @@ jump method
 
 exit
 
-method: load V1 5
+method:
+load V1 5
 add V1 V1 V1
 print V1
 jumpr RA

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SimuNet;
 
 namespace SimuNetAssembler
@@ -10,6 +11,10 @@ namespace SimuNetAssembler
         private readonly CPU m_CPU;
         private readonly Dictionary<string, int> m_Labels = new Dictionary<string, int>();
 
+        private delegate bool LabelFoundDelegate(string labelText);
+
+        private readonly List<LabelFoundDelegate> m_PendingLabelReferences = new List<LabelFoundDelegate>();
+
         public Assembler(CPU cpu)
         {
             m_CPU = cpu;
@@ -17,9 +22,7 @@ namespace SimuNetAssembler
 
         public Program Assemble(FileInfo file)
         {
-            List<Instruction> instructions = new List<Instruction>();
-
-            ReadLabels(file);
+            List<ParsedInstruction> instructions = new List<ParsedInstruction>();
 
             using (StreamReader reader = file.OpenText())
             {
@@ -34,38 +37,87 @@ namespace SimuNetAssembler
                     if (IsComment(line))
                         continue;
 
-                    string[] tokens = line.Split(' ');
+                    ParsedInstruction instr = new ParsedInstruction
+                    {
+                        Line = line,
+                        LineNumber = lineNumber,
+                        InstructionNumber = instructions.Count
+                    };
 
                     try
                     {
-                        instructions.Add(ParseInstruction(tokens));
+                        ParseLine(instr);
                     }
                     catch (ArgumentException e)
                     {
                         throw new InvalidOperationException($"Parsing line {lineNumber} failed: {e.Message}");
                     }
+
+                    instructions.Add(instr);
                 }
             }
 
-            return new Program(instructions);
+            foreach (var pInstruction in instructions)
+            {
+                if (pInstruction.Instruction == null)
+                    throw new InvalidOperationException($"Line {pInstruction.LineNumber} was not successfully resolved. This is likely due to a missing label definition.");
+            }
+
+            return new Program(instructions.Select(p => p.Instruction));
         }
 
-        private Instruction ParseInstruction(string[] tokens)
+        private void ParseLine(ParsedInstruction instr)
         {
-            string label = tokens[0].EndsWith(":") ? ParseLabel(tokens[0]) : null;
+            instr.Tokens = instr.Line.Split(' ');
+
+            string label = instr.Tokens[0].EndsWith(":") ? ParseLabel(instr.Tokens[0]) : null;
+            if (label != null)
+            {
+                instr.Label = label;
+
+                if (!m_Labels.ContainsKey(label))
+                {
+                    m_Labels.Add(label, instr.InstructionNumber);
+
+                    for (int i = 0; i < m_PendingLabelReferences.Count; i++)
+                    {
+                        bool resolved = m_PendingLabelReferences[i].Invoke(label);
+                        if (resolved)
+                        {
+                            m_PendingLabelReferences.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+            }
 
             // If this line has a label but no instruction,
             // such as "label:", insert a No-Op instruction on the line.
             // Keeps label jumps simple.
-            if (label != null && tokens.Length == 1)
+            if (instr.Label != null && instr.Tokens.Length == 1)
             {
-                return Instruction.NoOp();
+                instr.Instruction = Instruction.NoOp();
+                return;
             }
 
-            int opIndex = label == null ? 0 : 1;
-            OpCode op = ParseOpCode(tokens[opIndex]);
+            instr.OpIndex = instr.Label == null ? 0 : 1;
+            instr.OpCode = ParseOpCode(instr.Tokens[instr.OpIndex]);
 
-            switch (op)
+            if (IsBranching(instr.OpCode))
+            {
+                ParseBranchingInstruction(instr);
+            }
+            else
+            {
+                instr.Instruction = ParseSimpleInstruction(instr);
+            }
+        }
+
+        private Instruction ParseSimpleInstruction(ParsedInstruction instr)
+        {
+            int opIndex = instr.OpIndex;
+            string[] tokens = instr.Tokens;
+            switch (instr.OpCode)
             {
                 case OpCode.Error:
                     return Instruction.Error();
@@ -107,26 +159,8 @@ namespace SimuNetAssembler
                     return Instruction.Push(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
                 case OpCode.Pop:
                     return Instruction.Pop(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
-                case OpCode.Jump:
-                    return Instruction.Jump(ParseInstructionNumber(tokens[opIndex + 1]));
                 case OpCode.JumpRegister:
                     return Instruction.JumpRegister(ParseRegister(tokens[opIndex + 1]));
-                case OpCode.BranchOnZero:
-                    return Instruction.BranchOnZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2]));
-                case OpCode.BranchOnNotZero:
-                    return Instruction.BranchOnNotZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2]));
-                case OpCode.BranchOnEqual:
-                    return Instruction.BranchOnEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
-                case OpCode.BranchOnNotEqual:
-                    return Instruction.BranchOnNotEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
-                case OpCode.BranchOnLessThan:
-                    return Instruction.BranchOnLessThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
-                case OpCode.BranchOnGreaterThan:
-                    return Instruction.BranchOnGreaterThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
-                case OpCode.BranchOnLessThanOrEqual:
-                    return Instruction.BranchOnLessThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
-                case OpCode.BranchOnGreaterThanOrEqual:
-                    return Instruction.BranchOnGreaterThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
                 case OpCode.PrintRegister:
                     return Instruction.PrintRegister(ParseRegister(tokens[opIndex + 1]));
                 default:
@@ -134,39 +168,116 @@ namespace SimuNetAssembler
             }
         }
 
-        private void ReadLabels(FileInfo file)
+        private void ParseBranchingInstruction(ParsedInstruction instr)
         {
-            m_Labels.Clear();
+            int opIndex = instr.OpIndex;
+            string[] tokens = instr.Tokens;
 
-            using (StreamReader labelReader = file.OpenText())
+            bool unresolved = false;
+            string unresolvedToken = null;
+            for (int i = tokens.Length - 1; i > opIndex; i--)
             {
-                int currentLine = -1;
-
-                while (!labelReader.EndOfStream)
+                if (IsUnresolvedLabel(tokens[i]))
                 {
-                    currentLine++;
-                    string line = labelReader.ReadLine().ToLowerInvariant();
-
-                    if (string.IsNullOrWhiteSpace(line)
-                        || IsComment(line))
-                    {
-                        currentLine--;
-                        continue;
-                    }
-
-                    string[] tokens = line.Split(' ');
-
-                    if (!tokens[0].EndsWith(":"))
-                        continue;
-
-                    m_Labels[ParseLabel(tokens[0])] = currentLine;
+                    unresolved = true;
+                    unresolvedToken = tokens[i];
+                    break;
                 }
+            }
+
+            if (unresolved)
+            {
+                bool LabelFound(string label)
+                {
+                    if (unresolvedToken != label)
+                        return false;
+
+                    ParseBranchingInstruction(instr);
+
+                    return true;
+                }
+
+                m_PendingLabelReferences.Add(LabelFound);
+                return;
+            }
+
+            switch (instr.OpCode)
+            {
+                case OpCode.Jump:
+                    instr.Instruction = Instruction.Jump(ParseInstructionNumber(tokens[opIndex + 1]));
+                    break;
+                case OpCode.BranchOnZero:
+                    instr.Instruction = Instruction.BranchOnZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2]));
+                    break;
+                case OpCode.BranchOnNotZero:
+                    instr.Instruction = Instruction.BranchOnNotZero(ParseRegister(tokens[opIndex + 1]), ParseInstructionNumber(tokens[opIndex + 2]));
+                    break;
+                case OpCode.BranchOnEqual:
+                    instr.Instruction = Instruction.BranchOnEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                    break;
+                case OpCode.BranchOnNotEqual:
+                    instr.Instruction = Instruction.BranchOnNotEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                    break;
+                case OpCode.BranchOnLessThan:
+                    instr.Instruction = Instruction.BranchOnLessThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                    break;
+                case OpCode.BranchOnGreaterThan:
+                    instr.Instruction = Instruction.BranchOnGreaterThan(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                    break;
+                case OpCode.BranchOnLessThanOrEqual:
+                    instr.Instruction = Instruction.BranchOnLessThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                    break;
+                case OpCode.BranchOnGreaterThanOrEqual:
+                    instr.Instruction = Instruction.BranchOnGreaterThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
+                    break;
+                case OpCode.PrintRegister:
+                    instr.Instruction = Instruction.PrintRegister(ParseRegister(tokens[opIndex + 1]));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private bool IsBranching(OpCode code)
+        {
+            switch (code)
+            {
+                case OpCode.BranchOnEqual:
+                case OpCode.BranchOnGreaterThan:
+                case OpCode.BranchOnGreaterThanOrEqual:
+                case OpCode.BranchOnLessThan:
+                case OpCode.BranchOnLessThanOrEqual:
+                case OpCode.BranchOnNotEqual:
+                case OpCode.BranchOnNotZero:
+                case OpCode.BranchOnZero:
+                case OpCode.Jump:
+                    return true;
+                default:
+                    return false;
             }
         }
 
         private bool IsComment(string line)
         {
             return line.Trim().StartsWith("//");
+        }
+
+        private bool IsUnresolvedLabel(string token)
+        {
+            if (int.TryParse(token, out _))
+                return false;
+            if (m_Labels.ContainsKey(token))
+                return false;
+
+            try
+            {
+                ParseRegister(token);
+                return false;
+            }
+            catch (ArgumentException)
+            {
+                return true;
+            }
         }
 
         private static string ParseLabel(string token)
@@ -241,8 +352,7 @@ namespace SimuNetAssembler
                 return i;
             if (m_Labels.TryGetValue(token, out i))
                 return i;
-
-            throw new KeyNotFoundException($"Could not find a line number for the label {token}");
+            return -1;
         }
     }
 }

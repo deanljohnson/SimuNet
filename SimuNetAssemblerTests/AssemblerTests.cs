@@ -45,5 +45,61 @@ namespace SimuNetAssembler.Tests
                 Assert.Throws<InvalidOperationException>(() => assem.Assemble(reader));
             }
         }
+
+        [Fact]
+        public void Macro_SubstitutionOneArgTest()
+        {
+            string source =
+                "#begin call $1\n" +
+                "addi PC 2 RA\n" +
+                "jump $1\n" +
+                "#end\n" +
+                "call method\n" +
+                "exit\n" +
+                "method:\n" +
+                "print PC\n" +
+                "exit";
+            byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
+            using (MemoryStream stream = new MemoryStream(sourceBytes))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                Assembler assem = new Assembler(new CPU());
+                Program program = assem.Assemble(reader);
+                Assert.Equal(OpCode.AddI, program[0].Code);
+                Assert.Equal(OpCode.Jump, program[1].Code);
+                Assert.Equal(OpCode.Exit, program[2].Code);
+                Assert.Equal(OpCode.NoOp, program[3].Code);
+                Assert.Equal(OpCode.PrintRegister, program[4].Code);
+                Assert.Equal(OpCode.Exit, program[5].Code);
+            }
+        }
+
+        [Fact]
+        public void Macro_SubstitutionTwoArgTest()
+        {
+            string source =
+                "#begin call $1 $2\n" +
+                "addi PC $2 RA\n" +
+                "jump $1\n" +
+                "#end\n" +
+                "call method 2\n" +
+                "exit\n" +
+                "method:\n" +
+                "print PC\n" +
+                "exit";
+            byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
+            using (MemoryStream stream = new MemoryStream(sourceBytes))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                Assembler assem = new Assembler(new CPU());
+                Program program = assem.Assemble(reader);
+                Assert.Equal(OpCode.AddI, program[0].Code);
+                Assert.Equal(OpCode.Jump, program[1].Code);
+                Assert.Equal(OpCode.Exit, program[2].Code);
+                Assert.Equal(OpCode.NoOp, program[3].Code);
+                Assert.Equal(OpCode.PrintRegister, program[4].Code);
+                Assert.Equal(OpCode.Exit, program[5].Code);
+            }
+        }
     }
 }

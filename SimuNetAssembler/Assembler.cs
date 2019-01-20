@@ -102,21 +102,7 @@ namespace SimuNetAssembler
             if (label != null)
             {
                 instr.Label = label;
-
-                if (!m_Labels.ContainsKey(label))
-                {
-                    m_Labels.Add(label, instr.InstructionNumber);
-
-                    for (int i = 0; i < m_PendingLabelReferences.Count; i++)
-                    {
-                        bool resolved = m_PendingLabelReferences[i].Invoke(label);
-                        if (resolved)
-                        {
-                            m_PendingLabelReferences.RemoveAt(i);
-                            i--;
-                        }
-                    }
-                }
+                ProcessLabel(instr.InstructionNumber, label);
             }
 
             // If this line has a label but no instruction,
@@ -130,18 +116,55 @@ namespace SimuNetAssembler
             }
 
             instr.OpIndex = instr.Label == null ? 0 : 1;
-            instr.OpCode = ParseOpCode(instr.Tokens[instr.OpIndex]);
-
-            if (IsBranching(instr.OpCode))
+            string opToken = instr.Tokens[instr.OpIndex];
+            if (m_Macros.TryGetValue(opToken, out Macro macro))
             {
-                ParseBranchingInstruction(instr);
+                string[] macroSource = macro.Instructions.ToArray();
+
+                for (int i = instr.OpIndex + 1, argIndex = 0; i < instr.Tokens.Length; i++, argIndex++)
+                {
+                    string arg = macro.Arguments[argIndex];
+                    string tok = instr.Tokens[i];
+                    for (int j = 0; j < macroSource.Length; j++)
+                    {
+                        macroSource[j] = macroSource[j].Replace(arg, tok);
+                    }
+                }
+
+                for (int i = 0; i < macroSource.Length; i++)
+                {
+                    ParseLine(macroSource[i], lineNumber, instructions);
+                }
             }
             else
             {
-                instr.Instruction = ParseSimpleInstruction(instr);
-            }
+                instr.OpCode = ParseOpCode(opToken);
 
-            instructions.Add(instr);
+                if (IsBranching(instr.OpCode))
+                    ParseBranchingInstruction(instr);
+                else
+                    instr.Instruction = ParseSimpleInstruction(instr);
+
+                instructions.Add(instr);
+            }
+        }
+
+        private void ProcessLabel(int instrNumber, string label)
+        {
+            if (!m_Labels.ContainsKey(label))
+            {
+                m_Labels.Add(label, instrNumber);
+
+                for (int i = 0; i < m_PendingLabelReferences.Count; i++)
+                {
+                    bool resolved = m_PendingLabelReferences[i].Invoke(label);
+                    if (resolved)
+                    {
+                        m_PendingLabelReferences.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
         }
 
         private Macro ParseBeginMacro(string line, int lineNumber)
@@ -153,7 +176,7 @@ namespace SimuNetAssembler
             {
                 string arg = tokens[i + 2];
                 if (arg[0] != '$'
-                    || !int.TryParse(arg, out int argIndex)
+                    || !int.TryParse(arg.Substring(1), out int argIndex)
                     || argIndex != i + 1)
                     throw new InvalidOperationException($"Cannot parse parameter {i} of macro on line {lineNumber}");
                 arguments[i] = arg;

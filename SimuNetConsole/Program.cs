@@ -9,7 +9,7 @@ namespace SimuNetConsole
     {
         private static void Main(string[] args)
         {
-            string fileName = "Programs/fib.txt";
+            string fileName = "Programs/fib-recursive.txt";
             if (args.Length == 1)
                 fileName = args[0];
 

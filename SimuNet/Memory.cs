@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SimuNet
 {
@@ -8,6 +9,7 @@ namespace SimuNet
     public class Memory
     {
         private readonly int[] m_Memory;
+        private readonly List<MemoryMap> m_MemoryMaps = new List<MemoryMap>();
 
         public int this[int address]
         {
@@ -19,7 +21,13 @@ namespace SimuNet
                     return m_Memory[address];
                 else
                 {
-                    // TODO: check memory maps
+                    foreach (var map in m_MemoryMaps)
+                    {
+                        if (address >= map.BaseAddress && address < map.BaseAddress + map.Length)
+                        {
+                            return map.Get(address);
+                        }
+                    }
                     return 0;
                 }
             }
@@ -31,7 +39,14 @@ namespace SimuNet
                     m_Memory[address] = value;
                 else
                 {
-                    // TODO: check memory maps
+                    foreach (var map in m_MemoryMaps)
+                    {
+                        if (address >= map.BaseAddress && address < map.BaseAddress + map.Length)
+                        {
+                            map.Set(address, value);
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -43,6 +58,19 @@ namespace SimuNet
         public Memory(int mainMemorySize)
         {
             m_Memory = new int[mainMemorySize];
+        }
+
+        public void AddMemoryMap(MemoryMap map)
+        {
+            if (map.BaseAddress < m_Memory.Length)
+                throw new InvalidOperationException("Memory maps cannot overlap main memory");
+            // TODO: check for overlap with all existing maps
+            m_MemoryMaps.Add(map);
+        }
+
+        public void RemoveMemoryMap(MemoryMap map)
+        {
+            m_MemoryMaps.Remove(map);
         }
     }
 }

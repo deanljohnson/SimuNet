@@ -48,7 +48,7 @@ namespace SimuNetTests
             Assert.Equal(bReg, instr.B);
             Assert.Equal(5, instr.Immediate1);
 
-            instr = Instruction.MulI(aReg, 5,  bReg);
+            instr = Instruction.MulI(aReg, 5, bReg);
             Assert.Equal(OpCode.MulI, instr.Code);
             Assert.Equal(aReg, instr.A);
             Assert.Equal(bReg, instr.B);
@@ -60,8 +60,8 @@ namespace SimuNetTests
             Assert.Equal(bReg, instr.B);
             Assert.Equal(5, instr.Immediate1);
 
-            instr = Instruction.Load(aReg, 10);
-            Assert.Equal(OpCode.Load, instr.Code);
+            instr = Instruction.LoadI(aReg, 10);
+            Assert.Equal(OpCode.LoadI, instr.Code);
             Assert.Equal(aReg, instr.A);
             Assert.Equal(10, instr.Immediate1);
 

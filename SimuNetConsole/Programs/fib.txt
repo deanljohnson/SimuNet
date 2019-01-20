@@ -1,6 +1,6 @@
-﻿load V0 1
-load V1 1
-load V3 701408733
+﻿loadi V0 1
+loadi V1 1
+loadi V3 701408733
 print V0
 print V1
 loop: add V0 V1 V2

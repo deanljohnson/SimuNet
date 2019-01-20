@@ -6,9 +6,9 @@ addi PC 2 RA
 jump $1
 #end
 
-load V0 1
-load V1 1
-load v3 200 // Compute fibonacci numbers up until we pass this point.
+loadi V0 1
+loadi V1 1
+loadi v3 200 // Compute fibonacci numbers up until we pass this point.
 
 // Setup method call stack frame
 push V0 0

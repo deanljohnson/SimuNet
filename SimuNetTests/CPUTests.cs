@@ -11,7 +11,7 @@ namespace SimuNetTests
         public void CPUInitTest()
         {
             CPU cpu = new CPU();
-            
+
             Assert.NotNull(cpu.V0);
             Assert.NotNull(cpu.V1);
             Assert.NotNull(cpu.V2);
@@ -39,7 +39,7 @@ namespace SimuNetTests
             CPU cpu = new CPU();
 
             Assert.Throws<NullReferenceException>(() => cpu.Execute(null));
-            
+
             cpu.Execute(Instruction.NoOp());
 
             Instruction instr = Instruction.Add(cpu.V0, cpu.V1, cpu.V2);
@@ -98,7 +98,7 @@ namespace SimuNetTests
             Assert.Equal(12, cpu.V0.Value);
             Assert.Equal(2, cpu.V1.Value);
 
-            instr = Instruction.Load(cpu.V0, 20);
+            instr = Instruction.LoadI(cpu.V0, 20);
             cpu.Execute(instr);
             Assert.Equal(20, cpu.V0.Value);
 
@@ -124,8 +124,8 @@ namespace SimuNetTests
         {
             CPU cpu = new CPU();
 
-            Instruction load5 = Instruction.Load(cpu.V0, 5);
-            Instruction load7 = Instruction.Load(cpu.V1, 7);
+            Instruction load5 = Instruction.LoadI(cpu.V0, 5);
+            Instruction load7 = Instruction.LoadI(cpu.V1, 7);
             Instruction add = Instruction.Add(cpu.V0, cpu.V1, cpu.V2);
 
             cpu.Execute(load5);
@@ -146,8 +146,8 @@ namespace SimuNetTests
 
             Program prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 7),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 7),
                 Instruction.Add(cpu.V0, cpu.V1, cpu.V2),
                 Instruction.Exit()
             });
@@ -160,9 +160,9 @@ namespace SimuNetTests
             CPU cpu2 = new CPU();
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu2.V0, 5),
+                Instruction.LoadI(cpu2.V0, 5),
                 Instruction.Jump(3),
-                Instruction.Load(cpu2.V1, 7),
+                Instruction.LoadI(cpu2.V1, 7),
                 Instruction.Add(cpu2.V0, cpu2.V1, cpu2.V2),
                 Instruction.Exit()
             });
@@ -181,11 +181,11 @@ namespace SimuNetTests
             // branch on zero
             Program prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 5),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 5),
                 Instruction.Sub(cpu.V0, cpu.V1, cpu.V2),
                 Instruction.BranchOnZero(cpu.V2, 5),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -198,11 +198,11 @@ namespace SimuNetTests
             // Branch on not zero
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 2),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 2),
                 Instruction.Sub(cpu.V0, cpu.V1, cpu.V2),
                 Instruction.BranchOnNotZero(cpu.V2, 5),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -215,10 +215,10 @@ namespace SimuNetTests
             // Branch on equal
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 5),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 5),
                 Instruction.BranchOnEqual(cpu.V0, cpu.V1, 4),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -231,10 +231,10 @@ namespace SimuNetTests
             // Branch on not equal
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 4),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 4),
                 Instruction.BranchOnNotEqual(cpu.V0, cpu.V1, 4),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -247,10 +247,10 @@ namespace SimuNetTests
             // Branch on less than
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 4),
-                Instruction.Load(cpu.V1, 5),
+                Instruction.LoadI(cpu.V0, 4),
+                Instruction.LoadI(cpu.V1, 5),
                 Instruction.BranchOnLessThan(cpu.V0, cpu.V1, 4),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -263,10 +263,10 @@ namespace SimuNetTests
             // Branch on greater than
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 4),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 4),
                 Instruction.BranchOnGreaterThan(cpu.V0, cpu.V1, 4),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -279,10 +279,10 @@ namespace SimuNetTests
             // Branch on less than or equal
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 5),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 5),
                 Instruction.BranchOnLessThanOrEqual(cpu.V0, cpu.V1, 4),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -295,10 +295,10 @@ namespace SimuNetTests
             // Branch on greater than or equal
             prog = new Program(new List<Instruction>
             {
-                Instruction.Load(cpu.V0, 5),
-                Instruction.Load(cpu.V1, 5),
+                Instruction.LoadI(cpu.V0, 5),
+                Instruction.LoadI(cpu.V1, 5),
                 Instruction.BranchOnGreaterThanOrEqual(cpu.V0, cpu.V1, 4),
-                Instruction.Load(cpu.V0, 20),
+                Instruction.LoadI(cpu.V0, 20),
                 Instruction.Exit()
             });
 
@@ -316,7 +316,7 @@ namespace SimuNetTests
 
             for (int i = 0; i < STACK_SIZE; i++)
             {
-                cpu.Execute(Instruction.Load(cpu.V0, i));
+                cpu.Execute(Instruction.LoadI(cpu.V0, i));
                 cpu.Execute(Instruction.Push(cpu.V0, i));
             }
 

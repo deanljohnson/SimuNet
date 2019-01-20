@@ -13,7 +13,7 @@ divi V0 5 V1
 lsi V3 1 V3
 rsi V3 1 V3
 equal V0 V1 V2
-load V0 5
+loadi V0 5
 move V1 V0
 push V0 0
 pop V0 0

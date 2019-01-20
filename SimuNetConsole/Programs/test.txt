@@ -1,5 +1,5 @@
-﻿load V0 5
-load V1 5
+﻿loadi V0 5
+loadi V1 5
 add V0 V1 V2
 print V2
 exit

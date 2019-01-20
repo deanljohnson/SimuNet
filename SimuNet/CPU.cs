@@ -109,7 +109,7 @@ namespace SimuNet
                     m_ALU.DoOp(instr.Code, instr.A.Value, instr.Immediate1, out result);
                     instr.B.Value = result;
                     break;
-                case OpCode.Load:
+                case OpCode.LoadI:
                     instr.A.Value = instr.Immediate1;
                     break;
                 case OpCode.Move:

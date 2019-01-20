@@ -23,7 +23,7 @@
 
         Equal,
 
-        Load,
+        LoadI,
         Move,
 
         Push,

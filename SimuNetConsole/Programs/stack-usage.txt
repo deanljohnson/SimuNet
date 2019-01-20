@@ -4,8 +4,8 @@
 // original state pre-method call to prepare for another call
 
 // Load values that will be passed to the method
-load V0 5
-load V1 5
+loadi V0 5
+loadi V1 5
 
 // Push the method arguments onto the stack and move the stack pointer
 push V0 0
@@ -24,8 +24,8 @@ subi SP 3 SP
 print V0
 
 // Load values that will be passed to the method
-load V0 7
-load V1 7
+loadi V0 7
+loadi V1 7
 
 // Push the method arguments onto the stack and move the stack pointer
 push V0 0

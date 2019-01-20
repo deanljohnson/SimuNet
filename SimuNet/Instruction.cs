@@ -132,9 +132,9 @@
             return new Instruction(OpCode.RightShiftI, source, target, shiftAmount);
         }
 
-        public static Instruction Load(Register a, int b)
+        public static Instruction LoadI(Register a, int b)
         {
-            return new Instruction(OpCode.Load, a, b);
+            return new Instruction(OpCode.LoadI, a, b);
         }
 
         public static Instruction Move(Register a, Register b)

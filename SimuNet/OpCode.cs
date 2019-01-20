@@ -24,6 +24,8 @@
         Equal,
 
         LoadI,
+        LoadMem,
+        LoadReg,
         Move,
 
         Push,

@@ -10,6 +10,7 @@ namespace SimuNet
     {
         private readonly ALU m_ALU = new ALU();
         private readonly Stack m_Stack = new Stack(1024);
+        private readonly Memory m_Memory = new Memory(65536);
 
         /// <summary>
         /// The program counter register. This register stores
@@ -111,6 +112,12 @@ namespace SimuNet
                     break;
                 case OpCode.LoadI:
                     instr.A.Value = instr.Immediate1;
+                    break;
+                case OpCode.LoadMem:
+                    instr.A.Value = m_Memory[instr.Immediate1];
+                    break;
+                case OpCode.LoadReg:
+                    instr.A.Value = m_Memory[instr.B.Value];
                     break;
                 case OpCode.Move:
                     instr.B.Value = instr.A.Value;

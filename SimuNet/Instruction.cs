@@ -137,6 +137,16 @@
             return new Instruction(OpCode.LoadI, a, b);
         }
 
+        public static Instruction LoadMem(Register dest, int address)
+        {
+            return new Instruction(OpCode.LoadMem, dest, address);
+        }
+
+        public static Instruction LoadReg(Register dest, Register addressSource)
+        {
+            return new Instruction(OpCode.LoadReg, dest, addressSource);
+        }
+
         public static Instruction Move(Register a, Register b)
         {
             return new Instruction(OpCode.Move, a, b);

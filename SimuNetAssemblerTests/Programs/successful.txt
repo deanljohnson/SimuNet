@@ -14,6 +14,8 @@ lsi V3 1 V3
 rsi V3 1 V3
 equal V0 V1 V2
 loadi V0 5
+loadr V0 V0
+loadm V0 5
 move V1 V0
 push V0 0
 pop V0 0

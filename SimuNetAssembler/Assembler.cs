@@ -184,6 +184,10 @@ namespace SimuNetAssembler
                     return Instruction.Equal(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseRegister(tokens[opIndex + 3]));
                 case OpCode.LoadI:
                     return Instruction.LoadI(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                case OpCode.LoadReg:
+                    return Instruction.LoadReg(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]));
+                case OpCode.LoadMem:
+                    return Instruction.LoadMem(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
                 case OpCode.Move:
                     return Instruction.Move(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]));
                 case OpCode.Push:
@@ -340,6 +344,8 @@ namespace SimuNetAssembler
                 case "rsi": return OpCode.RightShiftI;
                 case "equal": return OpCode.Equal;
                 case "loadi": return OpCode.LoadI;
+                case "loadr": return OpCode.LoadReg;
+                case "loadm": return OpCode.LoadMem;
                 case "move": return OpCode.Move;
                 case "push": return OpCode.Push;
                 case "pop": return OpCode.Pop;

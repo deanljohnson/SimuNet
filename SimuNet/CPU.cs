@@ -10,7 +10,7 @@ namespace SimuNet
     {
         private readonly ALU m_ALU = new ALU();
         private readonly Stack m_Stack = new Stack(1024);
-        private readonly Memory m_Memory = new Memory(65536);
+        private readonly Memory m_Memory;
 
         /// <summary>
         /// The program counter register. This register stores
@@ -54,6 +54,11 @@ namespace SimuNet
         public Program LoadedProgram { get; private set; }
 
         public Action<string> Print;
+
+        public CPU(Memory memory)
+        {
+            m_Memory = memory;
+        }
 
         /// <summary>
         /// Loads the given program into the CPU.

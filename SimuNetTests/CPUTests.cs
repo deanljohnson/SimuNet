@@ -10,7 +10,7 @@ namespace SimuNetTests
         [Fact]
         public void CPUInitTest()
         {
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
 
             Assert.NotNull(cpu.V0);
             Assert.NotNull(cpu.V1);
@@ -36,7 +36,7 @@ namespace SimuNetTests
         [Fact]
         public void CPUExecuteTest()
         {
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
 
             Assert.Throws<NullReferenceException>(() => cpu.Execute(null));
 
@@ -122,7 +122,7 @@ namespace SimuNetTests
         [Fact]
         public void CPUExecuteMultipleTest()
         {
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
 
             Instruction load5 = Instruction.LoadI(cpu.V0, 5);
             Instruction load7 = Instruction.LoadI(cpu.V1, 7);
@@ -140,7 +140,7 @@ namespace SimuNetTests
         [Fact]
         public void CPUProgramTest()
         {
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
 
             Assert.Throws<InvalidOperationException>(() => cpu.RunProgram());
 
@@ -157,7 +157,7 @@ namespace SimuNetTests
 
             Assert.Equal(12, cpu.V2.Value);
 
-            CPU cpu2 = new CPU();
+            CPU cpu2 = new CPU(new Memory(65536));
             prog = new Program(new List<Instruction>
             {
                 Instruction.LoadI(cpu2.V0, 5),
@@ -176,7 +176,7 @@ namespace SimuNetTests
         [Fact]
         public void CPUBranchTest()
         {
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
 
             // branch on zero
             Program prog = new Program(new List<Instruction>
@@ -194,7 +194,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on not zero
             prog = new Program(new List<Instruction>
             {
@@ -211,7 +211,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on equal
             prog = new Program(new List<Instruction>
             {
@@ -227,7 +227,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on not equal
             prog = new Program(new List<Instruction>
             {
@@ -243,7 +243,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on less than
             prog = new Program(new List<Instruction>
             {
@@ -259,7 +259,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on greater than
             prog = new Program(new List<Instruction>
             {
@@ -275,7 +275,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on less than or equal
             prog = new Program(new List<Instruction>
             {
@@ -291,7 +291,7 @@ namespace SimuNetTests
 
             Assert.NotEqual(20, cpu.V0.Value);
 
-            cpu = new CPU();
+            cpu = new CPU(new Memory(65536));
             // Branch on greater than or equal
             prog = new Program(new List<Instruction>
             {
@@ -312,7 +312,7 @@ namespace SimuNetTests
         public void CPUStack()
         {
             const int STACK_SIZE = 1024;
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
 
             for (int i = 0; i < STACK_SIZE; i++)
             {
@@ -332,7 +332,7 @@ namespace SimuNetTests
         [Fact]
         public void CPUShiftOperations()
         {
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
             cpu.V0.Value = 1;
             cpu.V1.Value = 1;
             cpu.Execute(Instruction.LeftShift(cpu.V0, cpu.V1, cpu.V0));

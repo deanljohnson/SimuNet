@@ -13,7 +13,7 @@ namespace SimuNetConsole
             if (args.Length == 1)
                 fileName = args[0];
 
-            CPU cpu = new CPU();
+            CPU cpu = new CPU(new Memory(65536));
             Assembler assem = new Assembler(cpu);
             cpu.Print = Console.WriteLine;
 

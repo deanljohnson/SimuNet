@@ -48,9 +48,10 @@ namespace SimuNet
         /// </summary>
         public Flags StatusFlags { get; private set; }
 
-        public void DoOp(OpCode code, int a, int b, out int c)
+        public void DoOp(OpCode code, int a, int b, out int c, out int d)
         {
             Error = ErrorCode.None;
+            d = 0;
             switch (code)
             {
                 case OpCode.Add:
@@ -74,6 +75,7 @@ namespace SimuNet
                         return;
                     }
                     c = a / b;
+                    d = a % b;
                     break;
                 case OpCode.LeftShift:
                 case OpCode.LeftShiftI:

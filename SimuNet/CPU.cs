@@ -48,6 +48,18 @@ namespace SimuNet
         public Register SP { get; } = new Register("SP");
 
         /// <summary>
+        /// The extra data register. Stores extra data resulting from an ALU operation.
+        /// For example, the remainder of OpCode.Div and OpCode.DivI operations is stored here.
+        /// </summary>
+        /// <returns></returns>
+        public Register EX { get; } = new Register("EX");
+
+        /// <summary>
+        /// The zero register. Always has a value of zero. Writes to this register have no effect.
+        /// </summary>
+        public Register ZE { get; } = new Register("ZE");
+
+        /// <summary>
         /// The currently loaded <see cref="Program"/>
         /// or null if none is loaded.
         /// </summary>
@@ -89,7 +101,7 @@ namespace SimuNet
 
         internal void Execute(Instruction instr)
         {
-            int result;
+            int result, extra = 0;
             switch (instr.Code)
             {
                 case OpCode.NoOp:
@@ -101,7 +113,7 @@ namespace SimuNet
                 case OpCode.LeftShift:
                 case OpCode.RightShift:
                 case OpCode.Equal:
-                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.B.Value, out result, out extra);
                     instr.C.Value = result;
                     break;
                 case OpCode.AddI:
@@ -110,7 +122,7 @@ namespace SimuNet
                 case OpCode.DivI:
                 case OpCode.LeftShiftI:
                 case OpCode.RightShiftI:
-                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.Immediate1, out result);
+                    m_ALU.DoOp(instr.Code, instr.A.Value, instr.Immediate1, out result, out extra);
                     instr.B.Value = result;
                     break;
                 case OpCode.LoadI:
@@ -144,43 +156,43 @@ namespace SimuNet
                     PC.Value = instr.A.Value - 1;
                     break;
                 case OpCode.BranchOnZero:
-                    m_ALU.DoOp(OpCode.SubI, instr.A.Value, 0, out result);
+                    m_ALU.DoOp(OpCode.SubI, instr.A.Value, 0, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnNotZero:
-                    m_ALU.DoOp(OpCode.SubI, instr.A.Value, 0, out result);
+                    m_ALU.DoOp(OpCode.SubI, instr.A.Value, 0, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Zero) != ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnEqual:
-                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnNotEqual:
-                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Zero) != ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnLessThan:
-                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Negative) == ALU.Flags.Negative)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnGreaterThan:
-                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Positive) == ALU.Flags.Positive)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnLessThanOrEqual:
-                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Negative) == ALU.Flags.Negative
                         || (m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
                     break;
                 case OpCode.BranchOnGreaterThanOrEqual:
-                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result);
+                    m_ALU.DoOp(OpCode.Sub, instr.A.Value, instr.B.Value, out result, out extra);
                     if ((m_ALU.StatusFlags & ALU.Flags.Positive) == ALU.Flags.Positive
                         || (m_ALU.StatusFlags & ALU.Flags.Zero) == ALU.Flags.Zero)
                         PC.Value = instr.Immediate1 - 1;
@@ -192,6 +204,9 @@ namespace SimuNet
                 default:
                     throw new ArgumentOutOfRangeException(nameof(instr), $"The given instruction has an unrecognized opCode of {instr.Code}");
             }
+
+            EX.Value = extra;
+            ZE.Value = 0;
         }
     }
 }

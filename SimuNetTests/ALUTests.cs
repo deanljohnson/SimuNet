@@ -10,7 +10,7 @@ namespace SimuNetTests
         public void DoOpErrorTest()
         {
             ALU alu = new ALU();
-            Assert.Throws<ArgumentOutOfRangeException>(() => alu.DoOp(OpCode.Error, 0, 0, out int _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => alu.DoOp(OpCode.Error, 0, 0, out int _, out int _));
         }
 
         [Theory]
@@ -50,7 +50,7 @@ namespace SimuNetTests
         public void DoOpTest(OpCode op, int a, int b, int expectedResult, ALU.Flags flags, ALU.ErrorCode error)
         {
             ALU alu = new ALU();
-            alu.DoOp(op, a, b, out int actualResult);
+            alu.DoOp(op, a, b, out int actualResult, out int _);
             Assert.Equal(expectedResult, actualResult);
             Assert.Equal(flags, alu.StatusFlags);
             Assert.Equal(error, alu.Error);

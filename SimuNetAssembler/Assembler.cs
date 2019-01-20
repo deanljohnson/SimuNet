@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SimuNet;
+using System.Linq;
 
 namespace SimuNetAssembler
 {
@@ -10,6 +10,7 @@ namespace SimuNetAssembler
     {
         private readonly CPU m_CPU;
         private readonly Dictionary<string, int> m_Labels = new Dictionary<string, int>();
+        private readonly Dictionary<string, Macro> m_Macros = new Dictionary<string, Macro>();
 
         private delegate bool LabelFoundDelegate(string labelText);
 
@@ -22,38 +23,59 @@ namespace SimuNetAssembler
 
         public Program Assemble(FileInfo file)
         {
-            List<ParsedInstruction> instructions = new List<ParsedInstruction>();
-
             using (StreamReader reader = file.OpenText())
+                return Assemble(reader);
+        }
+
+        public Program Assemble(StreamReader reader)
+        {
+            List<ParsedInstruction> instructions = new List<ParsedInstruction>();
+            List<string> macroBuffer = new List<string>();
+
+            int lineNumber = 0;
+            bool inMacro = false;
+            Macro inProgressMacro = null;
+            while (!reader.EndOfStream)
             {
-                int lineNumber = 0;
-                while (!reader.EndOfStream)
+                string line = reader.ReadLine().ToLowerInvariant();
+                lineNumber++;
+
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+                if (IsComment(line))
+                    continue;
+
+                if (IsBeginMacro(line))
                 {
-                    string line = reader.ReadLine().ToLowerInvariant();
-                    lineNumber++;
+                    inMacro = true;
+                    inProgressMacro = ParseBeginMacro(line, lineNumber);
+                }
+                else if (IsEndMacro(line))
+                {
+                    if (!inMacro)
+                        throw new InvalidOperationException($"Invalid end of macro on line {lineNumber}");
 
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    if (IsComment(line))
-                        continue;
+                    inProgressMacro.Instructions = macroBuffer.ToArray();
+                    macroBuffer.Clear();
+                    m_Macros.Add(inProgressMacro.Name, inProgressMacro);
 
-                    ParsedInstruction instr = new ParsedInstruction
-                    {
-                        Line = line,
-                        LineNumber = lineNumber,
-                        InstructionNumber = instructions.Count
-                    };
-
+                    inMacro = false;
+                    inProgressMacro = null;
+                }
+                else if (inMacro)
+                {
+                    macroBuffer.Add(line);
+                }
+                else
+                {
                     try
                     {
-                        ParseLine(instr);
+                        ParseLine(line, lineNumber, instructions);
                     }
                     catch (ArgumentException e)
                     {
                         throw new InvalidOperationException($"Parsing line {lineNumber} failed: {e.Message}");
                     }
-
-                    instructions.Add(instr);
                 }
             }
 
@@ -66,9 +88,15 @@ namespace SimuNetAssembler
             return new Program(instructions.Select(p => p.Instruction));
         }
 
-        private void ParseLine(ParsedInstruction instr)
+        private void ParseLine(string line, int lineNumber, List<ParsedInstruction> instructions)
         {
-            instr.Tokens = instr.Line.Split(' ');
+            ParsedInstruction instr = new ParsedInstruction
+            {
+                Line = line,
+                LineNumber = lineNumber,
+                InstructionNumber = instructions.Count,
+                Tokens = line.Split(' ')
+            };
 
             string label = instr.Tokens[0].EndsWith(":") ? ParseLabel(instr.Tokens[0]) : null;
             if (label != null)
@@ -97,6 +125,7 @@ namespace SimuNetAssembler
             if (instr.Label != null && instr.Tokens.Length == 1)
             {
                 instr.Instruction = Instruction.NoOp();
+                instructions.Add(instr);
                 return;
             }
 
@@ -111,6 +140,30 @@ namespace SimuNetAssembler
             {
                 instr.Instruction = ParseSimpleInstruction(instr);
             }
+
+            instructions.Add(instr);
+        }
+
+        private Macro ParseBeginMacro(string line, int lineNumber)
+        {
+            string[] tokens = line.Split(' ');
+
+            string[] arguments = new string[tokens.Length - 2];
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                string arg = tokens[i + 2];
+                if (arg[0] != '$'
+                    || !int.TryParse(arg, out int argIndex)
+                    || argIndex != i + 1)
+                    throw new InvalidOperationException($"Cannot parse parameter {i} of macro on line {lineNumber}");
+                arguments[i] = arg;
+            }
+
+            return new Macro()
+            {
+                Name = tokens[1],
+                Arguments = arguments
+            };
         }
 
         private Instruction ParseSimpleInstruction(ParsedInstruction instr)
@@ -255,6 +308,16 @@ namespace SimuNetAssembler
                 default:
                     return false;
             }
+        }
+
+        private bool IsBeginMacro(string line)
+        {
+            return line.Trim().StartsWith("#begin");
+        }
+
+        private bool IsEndMacro(string line)
+        {
+            return line.Trim() == "#end";
         }
 
         private bool IsComment(string line)

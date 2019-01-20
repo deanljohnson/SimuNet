@@ -119,17 +119,7 @@ namespace SimuNetAssembler
             string opToken = instr.Tokens[instr.OpIndex];
             if (m_Macros.TryGetValue(opToken, out Macro macro))
             {
-                string[] macroSource = macro.Instructions.ToArray();
-
-                for (int i = instr.OpIndex + 1, argIndex = 0; i < instr.Tokens.Length; i++, argIndex++)
-                {
-                    string arg = macro.Arguments[argIndex];
-                    string tok = instr.Tokens[i];
-                    for (int j = 0; j < macroSource.Length; j++)
-                    {
-                        macroSource[j] = macroSource[j].Replace(arg, tok);
-                    }
-                }
+                string[] macroSource = macro.SubstituteArguments(instr.Tokens.AsSpan().Slice(instr.OpIndex + 1));
 
                 for (int i = 0; i < macroSource.Length; i++)
                 {

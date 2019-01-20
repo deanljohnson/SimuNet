@@ -173,12 +173,6 @@ namespace SimuNetTests
             Assert.Equal(aReg, instr.A);
             Assert.Equal(bReg, instr.B);
 
-            instr = Instruction.PrintRegister(aReg);
-            Assert.Equal(OpCode.PrintRegister, instr.Code);
-            Assert.Equal(aReg, instr.A);
-            Assert.Null(instr.B);
-            Assert.Null(instr.C);
-
             instr = Instruction.NoOp();
             Assert.Equal(OpCode.NoOp, instr.Code);
             Assert.Null(instr.A);

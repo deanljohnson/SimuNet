@@ -2,6 +2,7 @@
 using System.IO;
 using SimuNet;
 using SimuNetAssembler;
+using SimuNetSystem;
 
 namespace SimuNetConsole
 {
@@ -13,12 +14,10 @@ namespace SimuNetConsole
             if (args.Length == 1)
                 fileName = args[0];
 
-            CPU cpu = new CPU(new Memory(65536));
-            Assembler assem = new Assembler(cpu);
-            cpu.Print = Console.WriteLine;
+            DefaultSystem system = new DefaultSystem();
 
-            cpu.LoadProgram(assem.Assemble(new FileInfo(fileName)));
-            cpu.RunProgram();
+            system.CPU.LoadProgram(system.Assembler.Assemble(new FileInfo(fileName)));
+            system.CPU.RunProgram();
 
             Console.ReadLine();
         }

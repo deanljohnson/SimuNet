@@ -43,7 +43,5 @@
         BranchOnGreaterThan,
         BranchOnLessThanOrEqual,
         BranchOnGreaterThanOrEqual,
-
-        PrintRegister
     }
 }

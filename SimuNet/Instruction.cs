@@ -227,11 +227,6 @@
             return new Instruction(OpCode.BranchOnGreaterThanOrEqual, a, b, target);
         }
 
-        public static Instruction PrintRegister(Register a)
-        {
-            return new Instruction(OpCode.PrintRegister, a);
-        }
-
         public static Instruction NoOp()
         {
             return new Instruction(OpCode.NoOp);

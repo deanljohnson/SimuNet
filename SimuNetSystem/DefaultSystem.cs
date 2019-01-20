@@ -1,5 +1,7 @@
 using SimuNet;
 using SimuNetAssembler;
+using System.IO;
+using System.Text;
 
 namespace SimuNetSystem
 {
@@ -19,6 +21,23 @@ namespace SimuNetSystem
             CPU = new CPU(Memory);
 
             Assembler = new Assembler(CPU);
+
+            LoadDefaultMacros();
+        }
+
+        private void LoadDefaultMacros()
+        {
+            AssembleMacroSource("#begin print $1\nstorem $1 65536\n#end");
+        }
+
+        private void AssembleMacroSource(string source)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(source);
+            using (var stream = new MemoryStream(bytes))
+            using (var reader = new StreamReader(stream))
+            {
+                Assembler.Assemble(reader);
+            }
         }
     }
 }

@@ -30,4 +30,3 @@ bolt V0 V1 5
 bogt V0 V1 5
 bogte V0 V1 5
 bolte V0 V1 5
-print V0

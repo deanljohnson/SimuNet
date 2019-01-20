@@ -53,8 +53,6 @@ namespace SimuNet
         /// </summary>
         public Program LoadedProgram { get; private set; }
 
-        public Action<string> Print;
-
         public CPU(Memory memory)
         {
             m_Memory = memory;
@@ -189,9 +187,6 @@ namespace SimuNet
                     break;
                 case OpCode.Exit:
                     LoadedProgram.Finished = true;
-                    break;
-                case OpCode.PrintRegister:
-                    Print?.Invoke($"{instr.A.Name}: {instr.A.Value}");
                     break;
                 case OpCode.Error:
                 default:

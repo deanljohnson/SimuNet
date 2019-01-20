@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SimuNetAssembler\SimuNetAssembler.csproj" />
     <ProjectReference Include="..\SimuNet\SimuNet.csproj" />
+    <ProjectReference Include="..\SimuNetSystem\SimuNetSystem.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

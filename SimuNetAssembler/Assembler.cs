@@ -72,6 +72,10 @@ namespace SimuNetAssembler
                     throw new InvalidOperationException($"Line {pInstruction.LineNumber} was not successfully resolved. This is likely due to a missing label definition.");
             }
 
+            // Clear information specific to assembling this file.
+            m_PendingLabelReferences.Clear();
+            m_Labels.Clear();
+
             return new Program(instructions.Select(p => p.Instruction));
         }
 
@@ -200,8 +204,6 @@ namespace SimuNetAssembler
                     return Instruction.Pop(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
                 case OpCode.JumpRegister:
                     return Instruction.JumpRegister(ParseRegister(tokens[opIndex + 1]));
-                case OpCode.PrintRegister:
-                    return Instruction.PrintRegister(ParseRegister(tokens[opIndex + 1]));
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -268,9 +270,6 @@ namespace SimuNetAssembler
                     break;
                 case OpCode.BranchOnGreaterThanOrEqual:
                     instr.Instruction = Instruction.BranchOnGreaterThanOrEqual(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]), ParseInstructionNumber(tokens[opIndex + 3]));
-                    break;
-                case OpCode.PrintRegister:
-                    instr.Instruction = Instruction.PrintRegister(ParseRegister(tokens[opIndex + 1]));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -365,7 +364,6 @@ namespace SimuNetAssembler
                 case "bogt": return OpCode.BranchOnGreaterThan;
                 case "bolte": return OpCode.BranchOnLessThanOrEqual;
                 case "bogte": return OpCode.BranchOnGreaterThanOrEqual;
-                case "print": return OpCode.PrintRegister;
                 default: throw new ArgumentException($"{token} is not a recognized instruction", nameof(token));
             }
         }

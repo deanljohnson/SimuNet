@@ -9,16 +9,15 @@ namespace SimuNetAssembler
     public class Assembler
     {
         private readonly CPU m_CPU;
+        private readonly MacroAssembler m_MacroAssembler;
         private readonly Dictionary<string, int> m_Labels = new Dictionary<string, int>();
-        private readonly Dictionary<string, Macro> m_Macros = new Dictionary<string, Macro>();
-
         private delegate bool LabelFoundDelegate(string labelText);
-
         private readonly List<LabelFoundDelegate> m_PendingLabelReferences = new List<LabelFoundDelegate>();
 
         public Assembler(CPU cpu)
         {
             m_CPU = cpu;
+            m_MacroAssembler = new MacroAssembler();
         }
 
         public Program Assemble(FileInfo file)
@@ -30,14 +29,11 @@ namespace SimuNetAssembler
         public Program Assemble(StreamReader reader)
         {
             List<ParsedInstruction> instructions = new List<ParsedInstruction>();
-            List<string> macroBuffer = new List<string>();
 
             int lineNumber = 0;
-            bool inMacro = false;
-            Macro inProgressMacro = null;
             while (!reader.EndOfStream)
             {
-                string line = reader.ReadLine().ToLowerInvariant();
+                string line = reader.ReadLine().ToLowerInvariant().Trim();
                 lineNumber++;
 
                 if (string.IsNullOrWhiteSpace(line))
@@ -45,26 +41,17 @@ namespace SimuNetAssembler
                 if (IsComment(line))
                     continue;
 
-                if (IsBeginMacro(line))
+                if (m_MacroAssembler.IsBeginMacro(line))
                 {
-                    inMacro = true;
-                    inProgressMacro = ParseBeginMacro(line, lineNumber);
+                    m_MacroAssembler.BeginMacro(line, lineNumber);
                 }
-                else if (IsEndMacro(line))
+                else if (m_MacroAssembler.IsEndMacro(line))
                 {
-                    if (!inMacro)
-                        throw new InvalidOperationException($"Invalid end of macro on line {lineNumber}");
-
-                    inProgressMacro.Instructions = macroBuffer.ToArray();
-                    macroBuffer.Clear();
-                    m_Macros.Add(inProgressMacro.Name, inProgressMacro);
-
-                    inMacro = false;
-                    inProgressMacro = null;
+                    m_MacroAssembler.EndMacro(lineNumber);
                 }
-                else if (inMacro)
+                else if (m_MacroAssembler.InMacro)
                 {
-                    macroBuffer.Add(line);
+                    m_MacroAssembler.AddToMacroSource(line);
                 }
                 else
                 {
@@ -117,7 +104,7 @@ namespace SimuNetAssembler
 
             instr.OpIndex = instr.Label == null ? 0 : 1;
             string opToken = instr.Tokens[instr.OpIndex];
-            if (m_Macros.TryGetValue(opToken, out Macro macro))
+            if (m_MacroAssembler.TryGetMacro(opToken, out Macro macro))
             {
                 string[] macroSource = macro.SubstituteArguments(instr.Tokens.AsSpan().Slice(instr.OpIndex + 1));
 
@@ -155,28 +142,6 @@ namespace SimuNetAssembler
                     }
                 }
             }
-        }
-
-        private Macro ParseBeginMacro(string line, int lineNumber)
-        {
-            string[] tokens = line.Split(' ');
-
-            string[] arguments = new string[tokens.Length - 2];
-            for (int i = 0; i < arguments.Length; i++)
-            {
-                string arg = tokens[i + 2];
-                if (arg[0] != '$'
-                    || !int.TryParse(arg.Substring(1), out int argIndex)
-                    || argIndex != i + 1)
-                    throw new InvalidOperationException($"Cannot parse parameter {i} of macro on line {lineNumber}");
-                arguments[i] = arg;
-            }
-
-            return new Macro()
-            {
-                Name = tokens[1],
-                Arguments = arguments
-            };
         }
 
         private Instruction ParseSimpleInstruction(ParsedInstruction instr)
@@ -321,16 +286,6 @@ namespace SimuNetAssembler
                 default:
                     return false;
             }
-        }
-
-        private bool IsBeginMacro(string line)
-        {
-            return line.Trim().StartsWith("#begin");
-        }
-
-        private bool IsEndMacro(string line)
-        {
-            return line.Trim() == "#end";
         }
 
         private bool IsComment(string line)

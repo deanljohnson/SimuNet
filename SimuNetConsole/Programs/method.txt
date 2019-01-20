@@ -14,5 +14,5 @@ exit
 method:
 loadi V1 5
 add V1 V1 V1
-print V1
+print-integer V1 V2
 jumpr RA

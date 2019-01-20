@@ -1,0 +1,6 @@
+// Prints a single digit whose integer value is stored in $1
+#begin print-digit $1
+addi $1 48 $1
+print $1
+subi $1 48 $1
+#end

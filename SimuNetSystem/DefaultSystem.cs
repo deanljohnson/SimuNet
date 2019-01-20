@@ -2,6 +2,7 @@ using SimuNet;
 using SimuNetAssembler;
 using System.IO;
 using System.Text;
+using System.Reflection;
 
 namespace SimuNetSystem
 {
@@ -27,14 +28,21 @@ namespace SimuNetSystem
 
         private void LoadDefaultMacros()
         {
-            AssembleMacroSource("#begin print $1\nstorem $1 65536\n#end");
+            var assem = Assembly.GetAssembly(typeof(DefaultSystem));
+            AssembleMacroResource(assem, "SimuNetSystem.Macros.print.macro");
+            AssembleMacroResource(assem, "SimuNetSystem.Macros.print-digit.macro");
+            AssembleMacroResource(assem, "SimuNetSystem.Macros.print-integer.macro");
         }
 
-        private void AssembleMacroSource(string source)
+        private void AssembleMacroResource(Assembly assembly, string resourceName)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(source);
-            using (var stream = new MemoryStream(bytes))
-            using (var reader = new StreamReader(stream))
+            var stream = assembly.GetManifestResourceStream(resourceName);
+            AssembleMacro(stream);
+        }
+
+        private void AssembleMacro(Stream stream)
+        {
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
                 Assembler.Assemble(reader);
             }

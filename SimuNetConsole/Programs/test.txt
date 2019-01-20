@@ -1,5 +1,5 @@
 ﻿loadi V0 5
 loadi V1 5
 add V0 V1 V2
-print V2
+print-integer V2 V3
 exit

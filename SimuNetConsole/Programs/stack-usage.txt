@@ -41,7 +41,7 @@ pop V0 -1
 // Move the stack to throw out the
 // arguments to the method and its return value
 subi SP 3 SP
-print V0
+print-integer V0 V2
 
 exit
 

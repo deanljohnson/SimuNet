@@ -3,9 +3,10 @@ loadi V1 1
 loadi V3 701408733
 print V0
 print V1
-loop: add V0 V1 V2
-print V2
-boe V2 V3 exit
+loop: add V0 V1 V0
+print-integer V0 V2
+boe V0 V3 exit
+move V0 V2
 move V1 V0
 move V2 V1
 jump loop

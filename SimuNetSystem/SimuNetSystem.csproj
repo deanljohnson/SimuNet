@@ -9,4 +9,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Macros\print.macro" />
+    <EmbeddedResource Include="Macros\print-digit.macro" />
+    <EmbeddedResource Include="Macros\print-integer.macro" />
+  </ItemGroup>
+
 </Project>

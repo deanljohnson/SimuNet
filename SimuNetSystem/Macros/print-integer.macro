@@ -1,0 +1,34 @@
+// Prints a single integer value stored in $1.
+// Uses the register in $2 for scratch work.
+#begin print-integer $1 $2
+
+// Store the initial value. Will restore this value when exiting.
+push $1 0
+// Init digit counter
+loadi $2 0
+
+print-integer-loop:
+divi $1 10 $1
+push EX 1       // Put this digit onto the stack
+addi SP 1 SP
+addi $2 1 $2    // Keep track of the number of digits
+bonz $1 print-integer-loop
+
+// Print digits from the stack
+print-integer-digits-reverse:
+boz $2 print-integer-digits-reverse-end
+pop $1 0
+subi SP 1 SP
+subi $2 1 $2
+print-digit $1
+jump print-integer-digits-reverse
+print-integer-digits-reverse-end:
+
+// Print a newline.
+loadi $2 10
+print $2
+
+// Restore the value being printed.
+pop $1 0 
+
+#end

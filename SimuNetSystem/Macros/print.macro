@@ -1,0 +1,4 @@
+// Prints a single character whose ASCII code is located in $1
+#begin print $1
+storem $1 65536
+#end

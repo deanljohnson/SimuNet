@@ -152,6 +152,16 @@
             return new Instruction(OpCode.Move, a, b);
         }
 
+        public static Instruction StoreMem(Register source, int destAddress)
+        {
+            return new Instruction(OpCode.StoreMem, source, destAddress);
+        }
+
+        public static Instruction StoreReg(Register source, Register addressSource)
+        {
+            return new Instruction(OpCode.StoreReg, source, addressSource);
+        }
+
         public static Instruction Equal(Register a, Register b, Register c)
         {
             return new Instruction(OpCode.Equal, a, b, c);

@@ -27,6 +27,8 @@
         LoadMem,
         LoadReg,
         Move,
+        StoreMem,
+        StoreReg,
 
         Push,
         Pop,

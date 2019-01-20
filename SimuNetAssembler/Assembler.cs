@@ -190,6 +190,10 @@ namespace SimuNetAssembler
                     return Instruction.LoadMem(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
                 case OpCode.Move:
                     return Instruction.Move(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]));
+                case OpCode.StoreMem:
+                    return Instruction.StoreMem(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                case OpCode.StoreReg:
+                    return Instruction.StoreReg(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]));
                 case OpCode.Push:
                     return Instruction.Push(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
                 case OpCode.Pop:
@@ -347,6 +351,8 @@ namespace SimuNetAssembler
                 case "loadr": return OpCode.LoadReg;
                 case "loadm": return OpCode.LoadMem;
                 case "move": return OpCode.Move;
+                case "storem": return OpCode.StoreMem;
+                case "storer": return OpCode.StoreReg;
                 case "push": return OpCode.Push;
                 case "pop": return OpCode.Pop;
                 case "jump": return OpCode.Jump;

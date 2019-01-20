@@ -80,6 +80,16 @@ namespace SimuNetTests
             Assert.Equal(aReg, instr.A);
             Assert.Equal(bReg, instr.B);
 
+            instr = Instruction.StoreMem(aReg, 8);
+            Assert.Equal(OpCode.StoreMem, instr.Code);
+            Assert.Equal(aReg, instr.A);
+            Assert.Equal(8, instr.Immediate1);
+
+            instr = Instruction.StoreReg(aReg, bReg);
+            Assert.Equal(OpCode.StoreReg, instr.Code);
+            Assert.Equal(aReg, instr.A);
+            Assert.Equal(bReg, instr.B);
+
             instr = Instruction.Equal(aReg, bReg, cReg);
             Assert.Equal(OpCode.Equal, instr.Code);
             Assert.Equal(aReg, instr.A);

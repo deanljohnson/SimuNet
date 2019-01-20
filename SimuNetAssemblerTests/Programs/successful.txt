@@ -17,6 +17,8 @@ loadi V0 5
 loadr V0 V0
 loadm V0 5
 move V1 V0
+storem V0 5
+storer V0 V1
 push V0 0
 pop V0 0
 jump 5

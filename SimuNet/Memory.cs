@@ -23,6 +23,17 @@ namespace SimuNet
                     return 0;
                 }
             }
+            set
+            {
+                if (address < 0)
+                    throw new InvalidOperationException("Out of Bounds Memory Access");
+                if (address < m_Memory.Length)
+                    m_Memory[address] = value;
+                else
+                {
+                    // TODO: check memory maps
+                }
+            }
         }
 
         /// <summary>

@@ -122,6 +122,12 @@ namespace SimuNet
                 case OpCode.Move:
                     instr.B.Value = instr.A.Value;
                     break;
+                case OpCode.StoreMem:
+                    m_Memory[instr.Immediate1] = instr.A.Value;
+                    break;
+                case OpCode.StoreReg:
+                    m_Memory[instr.B.Value] = instr.A.Value;
+                    break;
                 case OpCode.Push:
                     m_Stack[SP.Value + instr.Immediate1] = instr.A.Value;
                     break;

@@ -1,45 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimuNet;
+using Xunit;
 
 namespace SimuNetTests
 {
-    [TestClass]
     public class CPUTests
     {
-        [TestMethod]
+        [Fact]
         public void CPUInitTest()
         {
             CPU cpu = new CPU();
             
-            Assert.IsNotNull(cpu.V0);
-            Assert.IsNotNull(cpu.V1);
-            Assert.IsNotNull(cpu.V2);
-            Assert.IsNotNull(cpu.V3);
-            Assert.IsNotNull(cpu.RA);
-            Assert.IsNotNull(cpu.SP);
+            Assert.NotNull(cpu.V0);
+            Assert.NotNull(cpu.V1);
+            Assert.NotNull(cpu.V2);
+            Assert.NotNull(cpu.V3);
+            Assert.NotNull(cpu.RA);
+            Assert.NotNull(cpu.SP);
 
-            Assert.AreEqual(cpu.V0.Name, "V0");
-            Assert.AreEqual(cpu.V1.Name, "V1");
-            Assert.AreEqual(cpu.V2.Name, "V2");
-            Assert.AreEqual(cpu.V3.Name, "V3");
-            Assert.AreEqual(cpu.RA.Name, "RA");
-            Assert.AreEqual(cpu.SP.Name, "SP");
+            Assert.Equal("V0", cpu.V0.Name);
+            Assert.Equal("V1", cpu.V1.Name);
+            Assert.Equal("V2", cpu.V2.Name);
+            Assert.Equal("V3", cpu.V3.Name);
+            Assert.Equal("RA", cpu.RA.Name);
+            Assert.Equal("SP", cpu.SP.Name);
 
-            Assert.AreEqual(0, cpu.V0.Value);
-            Assert.AreEqual(0, cpu.V1.Value);
-            Assert.AreEqual(0, cpu.V2.Value);
-            Assert.AreEqual(0, cpu.V3.Value);
-            Assert.AreEqual(0, cpu.SP.Value);
+            Assert.Equal(0, cpu.V0.Value);
+            Assert.Equal(0, cpu.V1.Value);
+            Assert.Equal(0, cpu.V2.Value);
+            Assert.Equal(0, cpu.V3.Value);
+            Assert.Equal(0, cpu.SP.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void CPUExecuteTest()
         {
             CPU cpu = new CPU();
 
-            Assert.ThrowsException<NullReferenceException>(() => cpu.Execute(null));
+            Assert.Throws<NullReferenceException>(() => cpu.Execute(null));
             
             cpu.Execute(Instruction.NoOp());
 
@@ -47,80 +46,80 @@ namespace SimuNetTests
             cpu.V0.Value = 5;
             cpu.V1.Value = 7;
             cpu.Execute(instr);
-            Assert.AreEqual(5, cpu.V0.Value);
-            Assert.AreEqual(7, cpu.V1.Value);
-            Assert.AreEqual(12, cpu.V2.Value);
+            Assert.Equal(5, cpu.V0.Value);
+            Assert.Equal(7, cpu.V1.Value);
+            Assert.Equal(12, cpu.V2.Value);
 
             instr = Instruction.Sub(cpu.V0, cpu.V1, cpu.V2);
             cpu.V0.Value = 12;
             cpu.V1.Value = 8;
             cpu.Execute(instr);
-            Assert.AreEqual(12, cpu.V0.Value);
-            Assert.AreEqual(8, cpu.V1.Value);
-            Assert.AreEqual(4, cpu.V2.Value);
+            Assert.Equal(12, cpu.V0.Value);
+            Assert.Equal(8, cpu.V1.Value);
+            Assert.Equal(4, cpu.V2.Value);
 
             instr = Instruction.Mul(cpu.V0, cpu.V1, cpu.V2);
             cpu.V0.Value = 3;
             cpu.V1.Value = 9;
             cpu.Execute(instr);
-            Assert.AreEqual(3, cpu.V0.Value);
-            Assert.AreEqual(9, cpu.V1.Value);
-            Assert.AreEqual(27, cpu.V2.Value);
+            Assert.Equal(3, cpu.V0.Value);
+            Assert.Equal(9, cpu.V1.Value);
+            Assert.Equal(27, cpu.V2.Value);
 
             instr = Instruction.Div(cpu.V0, cpu.V1, cpu.V2);
             cpu.V0.Value = 12;
             cpu.V1.Value = 2;
             cpu.Execute(instr);
-            Assert.AreEqual(12, cpu.V0.Value);
-            Assert.AreEqual(2, cpu.V1.Value);
-            Assert.AreEqual(6, cpu.V2.Value);
+            Assert.Equal(12, cpu.V0.Value);
+            Assert.Equal(2, cpu.V1.Value);
+            Assert.Equal(6, cpu.V2.Value);
 
             instr = Instruction.AddI(cpu.V0, 5, cpu.V1);
             cpu.V0.Value = 5;
             cpu.Execute(instr);
-            Assert.AreEqual(5, cpu.V0.Value);
-            Assert.AreEqual(10, cpu.V1.Value);
+            Assert.Equal(5, cpu.V0.Value);
+            Assert.Equal(10, cpu.V1.Value);
 
             instr = Instruction.SubI(cpu.V0, 6, cpu.V1);
             cpu.V0.Value = 12;
             cpu.Execute(instr);
-            Assert.AreEqual(12, cpu.V0.Value);
-            Assert.AreEqual(6, cpu.V1.Value);
+            Assert.Equal(12, cpu.V0.Value);
+            Assert.Equal(6, cpu.V1.Value);
 
             instr = Instruction.MulI(cpu.V0, 7, cpu.V1);
             cpu.V0.Value = 3;
             cpu.Execute(instr);
-            Assert.AreEqual(3, cpu.V0.Value);
-            Assert.AreEqual(21, cpu.V1.Value);
+            Assert.Equal(3, cpu.V0.Value);
+            Assert.Equal(21, cpu.V1.Value);
 
             instr = Instruction.DivI(cpu.V0, 6, cpu.V1);
             cpu.V0.Value = 12;
             cpu.Execute(instr);
-            Assert.AreEqual(12, cpu.V0.Value);
-            Assert.AreEqual(2, cpu.V1.Value);
+            Assert.Equal(12, cpu.V0.Value);
+            Assert.Equal(2, cpu.V1.Value);
 
             instr = Instruction.Load(cpu.V0, 20);
             cpu.Execute(instr);
-            Assert.AreEqual(20, cpu.V0.Value);
+            Assert.Equal(20, cpu.V0.Value);
 
             instr = Instruction.Move(cpu.V0, cpu.V1);
             cpu.V0.Value = 10;
             cpu.V1.Value = 5;
             cpu.Execute(instr);
-            Assert.AreEqual(10, cpu.V1.Value);
+            Assert.Equal(10, cpu.V1.Value);
 
             instr = Instruction.JumpRegister(cpu.V0);
             cpu.V0.Value = 10;
             cpu.Execute(instr);
             // 1 less than the target register because the CPU will
             // increment this before moving to the next instruction.
-            Assert.AreEqual(9, cpu.PC.Value);
+            Assert.Equal(9, cpu.PC.Value);
 
             instr = Instruction.Error();
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => cpu.Execute(instr));
+            Assert.Throws<ArgumentOutOfRangeException>(() => cpu.Execute(instr));
         }
 
-        [TestMethod]
+        [Fact]
         public void CPUExecuteMultipleTest()
         {
             CPU cpu = new CPU();
@@ -133,17 +132,17 @@ namespace SimuNetTests
             cpu.Execute(load7);
             cpu.Execute(add);
 
-            Assert.AreEqual(5, cpu.V0.Value);
-            Assert.AreEqual(7, cpu.V1.Value);
-            Assert.AreEqual(12, cpu.V2.Value);
+            Assert.Equal(5, cpu.V0.Value);
+            Assert.Equal(7, cpu.V1.Value);
+            Assert.Equal(12, cpu.V2.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void CPUProgramTest()
         {
             CPU cpu = new CPU();
 
-            Assert.ThrowsException<InvalidOperationException>(() => cpu.RunProgram());
+            Assert.Throws<InvalidOperationException>(() => cpu.RunProgram());
 
             Program prog = new Program(new List<Instruction>
             {
@@ -156,7 +155,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreEqual(12, cpu.V2.Value);
+            Assert.Equal(12, cpu.V2.Value);
 
             CPU cpu2 = new CPU();
             prog = new Program(new List<Instruction>
@@ -171,10 +170,10 @@ namespace SimuNetTests
             cpu2.LoadProgram(prog);
             cpu2.RunProgram();
 
-            Assert.AreEqual(5, cpu2.V2.Value);
+            Assert.Equal(5, cpu2.V2.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void CPUBranchTest()
         {
             CPU cpu = new CPU();
@@ -193,7 +192,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on not zero
@@ -210,7 +209,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on equal
@@ -226,7 +225,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on not equal
@@ -242,7 +241,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on less than
@@ -258,7 +257,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on greater than
@@ -274,7 +273,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on less than or equal
@@ -290,7 +289,7 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
 
             cpu = new CPU();
             // Branch on greater than or equal
@@ -306,10 +305,10 @@ namespace SimuNetTests
             cpu.LoadProgram(prog);
             cpu.RunProgram();
 
-            Assert.AreNotEqual(20, cpu.V0.Value);
+            Assert.NotEqual(20, cpu.V0.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void CPUStack()
         {
             const int STACK_SIZE = 1024;
@@ -326,24 +325,24 @@ namespace SimuNetTests
             for (int i = 0; i < STACK_SIZE; i++)
             {
                 cpu.Execute(Instruction.Pop(cpu.V1, -i - 1));
-                Assert.AreEqual(STACK_SIZE - i - 1, cpu.V1.Value);
+                Assert.Equal(STACK_SIZE - i - 1, cpu.V1.Value);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CPUShiftOperations()
         {
             CPU cpu = new CPU();
             cpu.V0.Value = 1;
             cpu.V1.Value = 1;
             cpu.Execute(Instruction.LeftShift(cpu.V0, cpu.V1, cpu.V0));
-            Assert.AreEqual(2, cpu.V0.Value);
+            Assert.Equal(2, cpu.V0.Value);
             cpu.Execute(Instruction.RightShift(cpu.V0, cpu.V1, cpu.V0));
-            Assert.AreEqual(1, cpu.V0.Value);
+            Assert.Equal(1, cpu.V0.Value);
             cpu.Execute(Instruction.LeftShiftI(cpu.V0, 1, cpu.V0));
-            Assert.AreEqual(2, cpu.V0.Value);
+            Assert.Equal(2, cpu.V0.Value);
             cpu.Execute(Instruction.RightShiftI(cpu.V0, 1, cpu.V0));
-            Assert.AreEqual(1, cpu.V0.Value);
+            Assert.Equal(1, cpu.V0.Value);
         }
     }
 }

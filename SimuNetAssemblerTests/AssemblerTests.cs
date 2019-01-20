@@ -1,13 +1,12 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimuNet;
+using Xunit;
 
 namespace SimuNetAssembler.Tests
 {
-    [TestClass]
     public class AssemblerTests
     {
-        [TestMethod]
+        [Fact]
         public void AssembleTest()
         {
             // Assemble a file with all supported instructions.
@@ -16,15 +15,15 @@ namespace SimuNetAssembler.Tests
             assem.Assemble(new FileInfo("Programs/successful.txt"));
         }
 
-        [TestMethod]
+        [Fact]
         public void CommentsIgnored()
         {
             Assembler assem = new Assembler(new CPU());
             Program prog = assem.Assemble(new FileInfo("Programs/comments-ignored.txt"));
-            Assert.AreEqual(3, prog.InstructionCount);
-            Assert.AreEqual(OpCode.Move, prog[0].Code);
-            Assert.AreEqual(OpCode.Add, prog[1].Code);
-            Assert.AreEqual(OpCode.Exit, prog[2].Code);
+            Assert.Equal(3, prog.InstructionCount);
+            Assert.Equal(OpCode.Move, prog[0].Code);
+            Assert.Equal(OpCode.Add, prog[1].Code);
+            Assert.Equal(OpCode.Exit, prog[2].Code);
         }
     }
 }

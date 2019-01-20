@@ -1,28 +1,27 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimuNet;
+﻿using SimuNet;
+using Xunit;
 
 namespace SimuNetTests
 {
-    [TestClass]
     public class RegisterTests
     {
-        [TestMethod]
+        [Fact]
         public void RegisterInitTest()
         {
             Register reg = new Register("A");
-            Assert.AreEqual(reg.Name, "A");
-            Assert.AreEqual(reg.Value, 0);
+            Assert.Equal("A", reg.Name);
+            Assert.Equal(0, reg.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void RegisterValueTest()
         {
             Register reg = new Register("A");
-            Assert.AreEqual(reg.Value, 0);
+            Assert.Equal(0, reg.Value);
             reg.Value = 1;
-            Assert.AreEqual(reg.Value, 1);
+            Assert.Equal(1, reg.Value);
             reg.Value = -1;
-            Assert.AreEqual(reg.Value, -1);
+            Assert.Equal(-1, reg.Value);
         }
     }
 }

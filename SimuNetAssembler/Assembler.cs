@@ -199,9 +199,9 @@ namespace SimuNetAssembler
                 case OpCode.StoreReg:
                     return Instruction.StoreReg(ParseRegister(tokens[opIndex + 1]), ParseRegister(tokens[opIndex + 2]));
                 case OpCode.Push:
-                    return Instruction.Push(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                    return Instruction.Push(ParseRegister(tokens[opIndex + 1]));
                 case OpCode.Pop:
-                    return Instruction.Pop(ParseRegister(tokens[opIndex + 1]), ParseImmediate(tokens[opIndex + 2]));
+                    return Instruction.Pop(ParseRegister(tokens[opIndex + 1]));
                 case OpCode.JumpRegister:
                     return Instruction.JumpRegister(ParseRegister(tokens[opIndex + 1]));
                 default:

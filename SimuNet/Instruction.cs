@@ -167,14 +167,14 @@
             return new Instruction(OpCode.Equal, a, b, c);
         }
 
-        public static Instruction Push(Register source, int offset)
+        public static Instruction Push(Register source)
         {
-            return new Instruction(OpCode.Push, source, offset);
+            return new Instruction(OpCode.Push, source);
         }
 
-        public static Instruction Pop(Register target, int offset)
+        public static Instruction Pop(Register target)
         {
-            return new Instruction(OpCode.Pop, target, offset);
+            return new Instruction(OpCode.Pop, target);
         }
 
         public static Instruction Jump(int a)

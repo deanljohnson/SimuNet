@@ -96,16 +96,14 @@ namespace SimuNetTests
             Assert.Equal(bReg, instr.B);
             Assert.Equal(cReg, instr.C);
 
-            instr = Instruction.Push(aReg, 10);
+            instr = Instruction.Push(aReg);
             Assert.Equal(OpCode.Push, instr.Code);
-            Assert.Equal(10, instr.Immediate1);
             Assert.Equal(instr.A, aReg);
             Assert.Null(instr.B);
             Assert.Null(instr.C);
 
-            instr = Instruction.Pop(aReg, 10);
+            instr = Instruction.Pop(aReg);
             Assert.Equal(OpCode.Pop, instr.Code);
-            Assert.Equal(10, instr.Immediate1);
             Assert.Equal(instr.A, aReg);
             Assert.Null(instr.B);
             Assert.Null(instr.C);

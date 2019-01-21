@@ -144,10 +144,10 @@ namespace SimuNet
                     m_Memory[instr.B.Value] = instr.A.Value;
                     break;
                 case OpCode.Push:
-                    m_Stack[SP.Value + instr.Immediate1] = instr.A.Value;
+                    m_Stack[SP.Value++] = instr.A.Value;
                     break;
                 case OpCode.Pop:
-                    instr.A.Value = m_Stack[SP.Value + instr.Immediate1];
+                    instr.A.Value = m_Stack[--SP.Value];
                     break;
                 case OpCode.Jump:
                     PC.Value = instr.Immediate1 - 1;

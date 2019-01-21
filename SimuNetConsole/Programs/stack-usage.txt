@@ -8,39 +8,31 @@ loadi V0 5
 loadi V1 5
 
 // Push the method arguments onto the stack and move the stack pointer
-push V0 0
-push V1 1
-addi SP 2 SP
+push V0
+push V1
 
 // Call the add method
 addi PC 2 RA
 jump add-method
 
 // Get the return value
-pop V0 -1
-// Move the stack to throw out the
-// arguments to the method and its return value
-subi SP 3 SP
+pop V0
 print V0
 
 // Load values that will be passed to the method
 loadi V0 7
 loadi V1 7
 
-// Push the method arguments onto the stack and move the stack pointer
-push V0 0
-push V1 1
-addi SP 2 SP
+// Push the method arguments onto the stack
+push V0
+push V1
 
 // Call the add method
 addi PC 2 RA
 jump add-method
 
 // Get the return value
-pop V0 -1
-// Move the stack to throw out the
-// arguments to the method and its return value
-subi SP 3 SP
+pop V0
 print-integer V0 V2
 
 exit
@@ -49,15 +41,14 @@ exit
 
 add-method:
 // Take our arguments off of the stack
-pop V0 -2
-pop V1 -1
+pop V1
+pop V0
 
 // Perform the add
 add V0 V1 V0
 
-// Push our return value and move the stack pointer
-push V0 0
-addi SP 1 SP
+// Push our return value
+push V0
 
 // Return from the function
 jumpr RA

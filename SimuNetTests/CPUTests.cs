@@ -317,14 +317,12 @@ namespace SimuNetTests
             for (int i = 0; i < STACK_SIZE; i++)
             {
                 cpu.Execute(Instruction.LoadI(cpu.V0, i));
-                cpu.Execute(Instruction.Push(cpu.V0, i));
+                cpu.Execute(Instruction.Push(cpu.V0));
             }
-
-            cpu.Execute(Instruction.AddI(cpu.SP, STACK_SIZE, cpu.SP));
 
             for (int i = 0; i < STACK_SIZE; i++)
             {
-                cpu.Execute(Instruction.Pop(cpu.V1, -i - 1));
+                cpu.Execute(Instruction.Pop(cpu.V1));
                 Assert.Equal(STACK_SIZE - i - 1, cpu.V1.Value);
             }
         }

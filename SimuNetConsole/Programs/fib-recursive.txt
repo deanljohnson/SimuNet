@@ -11,39 +11,34 @@ loadi V1 1
 loadi v3 200 // Compute fibonacci numbers up until we pass this point.
 
 // Setup method call stack frame
-push V0 0
-push V1 1
-push V3 2
-addi SP 3 SP
+push V0
+push V1
+push V3
 
 // Call fib method
 call fib
-
-subi SP 3 SP // Destroy method call stack frame
 exit
 
 
 fib:
 // Get arguments
-pop V0 -3 // First number
-pop V1 -2 // Second number
-pop V3 -1 // Limit
+pop V3 // Limit
+pop V1 // Second number
+pop V0 // First Number
 
 add V0 V1 V0
 print-integer V0 V2
 bogte V0 V3 fib-return
 
 // Recursive call
-push RA 0 // Push our return address onto the stack
-push V1 1 // First argument
-push V0 2 // Second argument
-push V3 3 // Third argument (limit)
-addi SP 4 SP // move stack pointer
+push RA // Push our return address onto the stack
+push V1 // First argument
+push V0 // Second argument
+push V3 // Third argument (limit)
 
 call fib
 
-pop RA -4 // Restore our return address
-subi SP 4 SP // Destroy method call stack frame
+pop RA // Restore our return address
 
 fib-return:
 jumpr RA

@@ -16,7 +16,12 @@ namespace SimuNetConsole
 
             DefaultSystem system = new DefaultSystem();
 
-            system.CPU.LoadProgram(system.Assembler.Assemble(new FileInfo(fileName)));
+            system.Assembler.BeginProgram();
+            system.AssembleSystemFiles();
+            system.Assembler.Assemble(new FileInfo(fileName));
+            SimuNet.Program prog = system.Assembler.EndProgram();
+
+            system.CPU.LoadProgram(prog);
             system.CPU.RunProgram();
 
             Console.ReadLine();

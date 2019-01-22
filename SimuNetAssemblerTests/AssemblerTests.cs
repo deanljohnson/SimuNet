@@ -21,7 +21,9 @@ namespace SimuNetAssembler.Tests
         public void CommentsIgnored()
         {
             Assembler assem = new Assembler(new CPU(new Memory(65536)));
-            Program prog = assem.Assemble(new FileInfo("Programs/comments-ignored.txt"));
+            assem.BeginProgram();
+            assem.Assemble(new FileInfo("Programs/comments-ignored.txt"));
+            Program prog = assem.EndProgram();
             Assert.Equal(3, prog.InstructionCount);
             Assert.Equal(OpCode.Move, prog[0].Code);
             Assert.Equal(OpCode.Add, prog[1].Code);

@@ -22,11 +22,12 @@ namespace SimuNetSystem
             CPU = new CPU(Memory);
 
             Assembler = new Assembler(CPU);
-
-            LoadDefaultMacros();
         }
 
-        private void LoadDefaultMacros()
+        /// <summary>
+        ///     Assembles system provided files into the in progress program of the systems assembler.
+        /// </summary>
+        public void AssembleSystemFiles()
         {
             var assem = Assembly.GetAssembly(typeof(DefaultSystem));
             AssembleMacroResource(assem, "SimuNetSystem.Macros.print.macro");

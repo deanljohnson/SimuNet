@@ -13,6 +13,7 @@ namespace SimuNetAssembler
         private readonly Dictionary<string, int> m_Labels = new Dictionary<string, int>();
         private delegate bool LabelFoundDelegate(string labelText);
         private readonly List<LabelFoundDelegate> m_PendingLabelReferences = new List<LabelFoundDelegate>();
+        private readonly List<ParsedInstruction> m_Instructions = new List<ParsedInstruction>();
 
         public Assembler(CPU cpu)
         {
@@ -20,16 +21,25 @@ namespace SimuNetAssembler
             m_MacroAssembler = new MacroAssembler();
         }
 
-        public Program Assemble(FileInfo file)
+        /// <summary>
+        ///     Starts assembly of a <see cref="Program"/> instance. Must be called before calling <see cref="Assemble"/>.
+        /// </summary>
+        public void BeginProgram()
         {
-            using (StreamReader reader = file.OpenText())
-                return Assemble(reader);
+            m_Instructions.Clear();
+            m_PendingLabelReferences.Clear();
+            m_Labels.Clear();
+            m_MacroAssembler.Reset();
         }
 
-        public Program Assemble(StreamReader reader)
+        public void Assemble(FileInfo file)
         {
-            List<ParsedInstruction> instructions = new List<ParsedInstruction>();
+            using (StreamReader reader = file.OpenText())
+                Assemble(reader);
+        }
 
+        public void Assemble(StreamReader reader)
+        {
             int lineNumber = 0;
             while (!reader.EndOfStream)
             {
@@ -57,7 +67,7 @@ namespace SimuNetAssembler
                 {
                     try
                     {
-                        ParseLine(line, lineNumber, instructions);
+                        ParseLine(line, lineNumber, m_Instructions);
                     }
                     catch (ArgumentException e)
                     {
@@ -65,18 +75,21 @@ namespace SimuNetAssembler
                     }
                 }
             }
+        }
 
-            foreach (var pInstruction in instructions)
+        /// <summary>
+        ///     Ends the assembling of a <see cref="Program"/>.
+        /// </summary>
+        /// <returns>The assembled program</returns>
+        /// <exception cref="InvalidOperationException">An instruction was not resolved completely.</exception>
+        public Program EndProgram()
+        {
+            foreach (var pInstruction in m_Instructions)
             {
                 if (pInstruction.Instruction == null)
                     throw new InvalidOperationException($"Line {pInstruction.LineNumber} was not successfully resolved. This is likely due to a missing label definition.");
             }
-
-            // Clear information specific to assembling this file.
-            m_PendingLabelReferences.Clear();
-            m_Labels.Clear();
-
-            return new Program(instructions.Select(p => p.Instruction));
+            return new Program(m_Instructions.Select(p => p.Instruction));
         }
 
         private void ParseLine(string line, int lineNumber, List<ParsedInstruction> instructions)

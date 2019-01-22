@@ -18,6 +18,16 @@ namespace SimuNetAssembler
         internal bool InMacro { get { return m_CurrentMacro != null; } }
 
         /// <summary>
+        ///     Clears all existing and in-progress macros.
+        /// </summary>
+        internal void Reset()
+        {
+            m_MacroSourceBuffer.Clear();
+            m_Macros.Clear();
+            m_CurrentMacro = null;
+        }
+
+        /// <summary>
         ///     Begins processing a macro. This should only be called with
         ///     lines for which <see cref="IsBeginMacro"/> returns true.
         /// </summary>

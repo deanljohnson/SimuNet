@@ -18,7 +18,15 @@
         },
         {
             "label": "test",
-            "command": "dotnet test",
+            "command": "dotnet",
+            "args": [
+                "test",
+                "/p:CollectCoverage=true",
+                "/p:Exclude=\"[xunit.*]*\"",
+                "/p:MergeWith=\"../coverage/coverage.json\"",
+                "/p:CoverletOutputFormat=\"json%2clcov\"",
+                "/p:CoverletOutput=\"../coverage/\""
+            ],
             "type": "shell",
             "group": {
                 "kind": "test",

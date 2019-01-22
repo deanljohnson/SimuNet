@@ -1,5 +1,6 @@
 using SimuNet;
 using SimuNetAssembler;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Reflection;
@@ -30,10 +31,8 @@ namespace SimuNetSystem
         public void AssembleSystemFiles()
         {
             var assem = Assembly.GetAssembly(typeof(DefaultSystem));
-            AssembleMacroResource(assem, "SimuNetSystem.Macros.call.macro");
-            AssembleMacroResource(assem, "SimuNetSystem.Macros.print.macro");
-            AssembleMacroResource(assem, "SimuNetSystem.Macros.print-digit.macro");
-            AssembleMacroResource(assem, "SimuNetSystem.Macros.print-integer.macro");
+            foreach (string macroName in assem.GetManifestResourceNames().Where(n => n.StartsWith("SimuNetSystem.Macros")))
+                AssembleMacroResource(assem, macroName);
         }
 
         private void AssembleMacroResource(Assembly assembly, string resourceName)

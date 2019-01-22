@@ -1,13 +1,10 @@
 ﻿// Demonstrates non-recursive method calls by storing
-// the PC in the RA register
 
 // Execute the method the first time
-addi PC 2 RA
-jump method
+call method
 
 // Execute the method the second time
-addi PC 2 RA
-jump method
+call method
 
 exit
 

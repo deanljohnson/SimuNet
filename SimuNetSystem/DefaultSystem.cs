@@ -30,6 +30,7 @@ namespace SimuNetSystem
         public void AssembleSystemFiles()
         {
             var assem = Assembly.GetAssembly(typeof(DefaultSystem));
+            AssembleMacroResource(assem, "SimuNetSystem.Macros.call.macro");
             AssembleMacroResource(assem, "SimuNetSystem.Macros.print.macro");
             AssembleMacroResource(assem, "SimuNetSystem.Macros.print-digit.macro");
             AssembleMacroResource(assem, "SimuNetSystem.Macros.print-integer.macro");

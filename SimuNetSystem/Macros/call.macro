@@ -1,0 +1,4 @@
+#begin call $1
+addi PC 2 RA
+jump $1
+#end

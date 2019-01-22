@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Macros\call.macro" />
     <EmbeddedResource Include="Macros\print.macro" />
     <EmbeddedResource Include="Macros\print-digit.macro" />
     <EmbeddedResource Include="Macros\print-integer.macro" />

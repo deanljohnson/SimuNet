@@ -12,8 +12,7 @@ push V0
 push V1
 
 // Call the add method
-addi PC 2 RA
-jump add-method
+call add-method
 
 // Get the return value
 pop V0
@@ -28,8 +27,7 @@ push V0
 push V1
 
 // Call the add method
-addi PC 2 RA
-jump add-method
+call add-method
 
 // Get the return value
 pop V0

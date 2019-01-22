@@ -1,11 +1,6 @@
 ﻿// Demonstrates calculating and printing fibonacci numbers
 // using recursive method calls.
 
-#begin call $1
-addi PC 2 RA
-jump $1
-#end
-
 loadi V0 1
 loadi V1 1
 loadi v3 200 // Compute fibonacci numbers up until we pass this point.

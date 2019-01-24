@@ -10,8 +10,8 @@ namespace SimuNet
         public delegate void SetDelegate(int addr, int value);
         public delegate int GetDelegate(int addr);
 
-        public event SetDelegate MemorySet;
-        public event GetDelegate MemoryGet;
+        public SetDelegate MemorySet;
+        public GetDelegate MemoryGet;
 
         public MemoryMap(int baseAddress, int length)
         {

@@ -19,17 +19,16 @@ namespace SimuNet
                     throw new InvalidOperationException("Out of Bounds Memory Access");
                 if (address < m_Memory.Length)
                     return m_Memory[address];
-                else
+
+                foreach (var map in m_MemoryMaps)
                 {
-                    foreach (var map in m_MemoryMaps)
+                    if (address >= map.BaseAddress && address < map.BaseAddress + map.Length)
                     {
-                        if (address >= map.BaseAddress && address < map.BaseAddress + map.Length)
-                        {
-                            return map.Get(address);
-                        }
+                        return map.Get(address);
                     }
-                    return 0;
                 }
+
+                throw new InvalidOperationException("Out of Bounds Memory Access");
             }
             set
             {
@@ -44,9 +43,10 @@ namespace SimuNet
                         if (address >= map.BaseAddress && address < map.BaseAddress + map.Length)
                         {
                             map.Set(address, value);
-                            break;
+                            return;
                         }
                     }
+                    throw new InvalidOperationException("Out of Bounds Memory Access");
                 }
             }
         }
@@ -57,11 +57,15 @@ namespace SimuNet
         /// <param name="mainMemorySize">The size of the RAM space in 32 bit words.</param>
         public Memory(int mainMemorySize)
         {
+            if (mainMemorySize < 0)
+                throw new ArgumentOutOfRangeException(nameof(mainMemorySize));
             m_Memory = new int[mainMemorySize];
         }
 
         public void AddMemoryMap(MemoryMap map)
         {
+            if (map == null)
+                throw new ArgumentNullException(nameof(map));
             if (map.BaseAddress < m_Memory.Length)
                 throw new InvalidOperationException("Memory maps cannot overlap main memory");
             // TODO: check for overlap with all existing maps
@@ -70,6 +74,8 @@ namespace SimuNet
 
         public void RemoveMemoryMap(MemoryMap map)
         {
+            if (map == null)
+                throw new ArgumentNullException(nameof(map));
             m_MemoryMaps.Remove(map);
         }
     }

@@ -1,0 +1,2 @@
+file2: add V0 V0 V0
+exit
